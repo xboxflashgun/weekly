@@ -1,8 +1,9 @@
-var titleids = {};		// titleids[titleid] = [ name, gamers ]
-var countries = {};		// countries[countryid] = [ coutry, countryname, gamers ]
-var gamers = {};		// gamers[titleid][countryid] = gamers
+var titleids = {};		// titleids[] = { titleid: titleid, name: name, gamers: gamers }
+var countries = {};		// countries[] = { coutry: country, countryname: countryname, gamers: gamers }
+var gamers = [];		// gamers[] = { titleid: titleid, countryid: countryid, gamers: gamers }
+var prevweek = [];		// same as gamers for previous week
 
-var prevweek = {};		// same as gamers for previous week
+var grouped;
 
 var allcountries = 0;
 var allgames = 0;
@@ -20,6 +21,7 @@ function main() {
 
 function draw_table() {
 
+	//////////////
 	// draw header
 	d3.select("#maintable thead tr").selectAll('th.countries')
 	.data(Object.keys(countries))
@@ -38,18 +40,19 @@ function draw_table() {
 
 	});
 
-	// draw rows
+	/////////////
+	// draw table
 	d3.select("#maintable tbody").selectAll('tr')
-	.data(Object.keys(titleids))
+	.data(grouped)
 	.join( enter => {
 
 		var tr = enter.append('tr');
 		var td = tr.append('td');
-		td.text(d => titleids[d][0]);
+		td.text(d => titleids[d[0]]);
 
 	}, update => {
 
-		update.text(d => titleids[d][0]);
+		update.text(d => titleids[d[0]]);
 
 	}, exit => {
 
@@ -65,7 +68,7 @@ var strparser = [
 	s => {		// titleids
 		var row = s.split('\t');
 		row[0] = (row[0] === '\\N') ? "0" : row[0];
-		titleids[row[0]] = [ row[1], +row[2] ];
+		titleids[row[0]] = [ row[1], +row[2] ] ;
 		allgames += +row[2];
 	},
 	s => {		// countries
@@ -77,15 +80,13 @@ var strparser = [
 		var row = s.split('\t');
 		row[0] = (row[0] === '\\N') ? "0" : row[0];
 		row[1] = (row[1] === '\\N') ? "0" : row[1];
-		gamers[row[1]] ??= {};
-		gamers[row[1]][row[0]] = +row[2];
+		gamers.push( { countryid: row[0], titleid: row[1], gamers: +row[2] } );
 	},
 	s => {		// prev week
 		var row = s.split('\t');
 		row[0] = (row[0] === '\\N') ? "0" : row[0];
 		row[1] = (row[1] === '\\N') ? "0" : row[1];
-		prevweek[row[1]] ??= {};
-		prevweek[row[1]][row[0]] = +row[2];
+		prevweek.push( { countryid: row[0], titleid: row[1], gamers: +row[2] } );
 	},
 ];
 
@@ -115,11 +116,14 @@ function read_data() {
 	.then( () => {
 
 		countries["0"] = [ 'World', 'World', allcountries ];
-		titleids["0"] = [ 'All games', 'All games', allgames];
+		titleids["0"] = [ 'All games', allgames ];
 		console.log(titleids);
 		console.log(countries);
 		console.log(gamers);
 		console.log(prevweek);
+
+		grouped = d3.group(gamers, d => d.titleid, d => d.countryid);
+		console.log(grouped);
 
 		draw_table();
 
