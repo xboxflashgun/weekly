@@ -12,7 +12,17 @@
 </head>
 <body onload="main()">
 	<div>
-		hi
+		<label><input type="radio" name="valform" value="place" checked>Place</label>
+		<label><input type="radio" name="valform" value="perc">Percantage</label>
+		<label><input type="radio" name="valform" value="abs">Absolute</label>
+	</div>
+	<div>
+		<table id="maintable">
+			<thead>
+				<th>Games <input type="text" size="20" maxlength="40" placeholder="Filter..." /><span class="clearstr">&#x2715;</span></th>
+			</thead>
+			<tbody></tbody>
+		</table>
 	</div>
 </body>
 </html>
