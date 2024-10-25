@@ -7,8 +7,10 @@ var prevweek = {};		// same as gamers for previous week
 var allcountries = 0;
 var allgames = 0;
 
-var sortcol = 1;
-var sortrow = 1;
+var sortcolnum = 1;
+var sortcolord = 1;
+var sortrownum = 1;
+var sortroword = 1;
 
 function main() {
 
@@ -18,7 +20,43 @@ function main() {
 
 function draw_table() {
 
-	var table = d3.select("#maintable");
+	// draw header
+	d3.select("#maintable thead tr").selectAll('th.countries')
+	.data(Object.keys(countries))
+	.join( enter => {
+	
+		var th = enter.append('th').classed('countries', true)
+			.text(d => countries[d][0]);
+	
+	}, update => {
+
+		update.text(d => countries[d][0]);
+
+	}, exit => {
+
+		exit.remove();
+
+	});
+
+	// draw rows
+	d3.select("#maintable tbody").selectAll('tr')
+	.data(Object.keys(titleids))
+	.join( enter => {
+
+		var tr = enter.append('tr');
+		var td = tr.append('td');
+		td.text(d => titleids[d][0]);
+
+	}, update => {
+
+		update.text(d => titleids[d][0]);
+
+	}, exit => {
+
+		exit.remove();
+
+	});
+
 
 }
 
