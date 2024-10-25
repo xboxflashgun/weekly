@@ -8,4 +8,14 @@ body {
 	background-color: #222;
 }
 
+table {
+	border: 1px solid #bbb;
+	border-collapse: collapse;
+}
+
+th,td {
+	border: 1px solid #bbb;
+	padding: 0px 9px;
+}
+
 
