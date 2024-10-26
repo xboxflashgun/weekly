@@ -13,6 +13,7 @@ var sortcolord = 1;
 var sortrow = "0";		// countryid
 var sortroword = -1;
 var show = "place";	// cell format: "gamers"/"perc"/"place"
+var showdiff = true;	// show difference with previous week
 
 function main() {
 
@@ -39,6 +40,20 @@ function draw_table() {
 
 	rowsorted.sort(sort2);
 	console.log('rowsorted', rowsorted);
+
+	//////
+	// format cells to .cell
+	Object.keys(gamers).map(t => Object.keys(gamers[t]).map(c => {
+
+		if(gamers[t][c][show]) {
+
+			gamers[t][c].cell = `${gamers[t][c][show]}`;
+			if(showdiff && prevweek[t])
+				gamers[t][c].cell += `<sup>${prevweek[t][c][show]}</sup>`;
+
+		}
+
+	}));
 
 	//////////////
 	// draw header
@@ -87,11 +102,11 @@ function draw_table() {
 	.data( (row,i) => colsorted.map( (col,j) => ({r: rowsorted[i],c: colsorted[j]}) ) )
 	.join( enter => {
 
-		enter.append('td').classed('cell', true).text( d => gamers[d.r][d.c][show] );
+		enter.append('td').classed('cell', true).html( d => gamers[d.r][d.c].cell );
 
 	}, update => {
 
-		update.text(d => gamers[d.r][d.c][show]);
+		update.html(d => gamers[d.r][d.c].cell);
 
 	}, exit => exit.remove()
 	);
