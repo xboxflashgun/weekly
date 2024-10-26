@@ -44,6 +44,10 @@ function draw_table() {
 	if(show === "place")
 		rowsorted.reverse();
 
+	// Remove information from "All games" cells if "place" option selected
+	if(show === "place")
+		colsorted.forEach( c => gamers["0"][c][show] = undefined );
+
 	//////
 	// format cells to .cell
 	Object.keys(gamers).map(t => Object.keys(gamers[t]).map(c => {
@@ -56,14 +60,14 @@ function draw_table() {
 				var grew = (gamers[t][c][show] > prevweek[t][c][show]);
 				grew = (show === "place") ? !grew : grew;
 
-				gamers[t][c].cell += `<sup class="${ grew ? "arrowup" : "arrowdown"}">${ grew ? '+' : '' }${gamers[t][c][show] - prevweek[t][c][show]}</sup>`;
+				gamers[t][c].cell += `<sup class="${ grew ? "arrowup" : "arrowdown"}">${ grew ^ (show === "place")? '+' : '' }${gamers[t][c][show] - prevweek[t][c][show]}</sup>`;
 
 			}
 
 		}
 
 	}));
-
+	
 	//////////////
 	// draw header
 	d3.select("#maintable thead tr").selectAll('th.countries')
@@ -100,7 +104,8 @@ function draw_table() {
 
 	}, update => {
 
-		update.text(d => titleids[d][0]);
+		var td = update.select("td");
+		td.text(d => titleids[d][0]);
 
 	}, exit => {
 
