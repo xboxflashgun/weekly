@@ -84,6 +84,9 @@ function draw_table() {
 		exit.remove();
 
 	});
+	// show arrow
+	d3.selectAll("th.countries").classed("sortasc", false).classed("sortdesc", false);
+	d3.select(`th[data-id="${sortrow}"]`).classed( (sortroword > 0) ? "sortasc" : "sortdesc", true);
 
 	/////////////
 	// draw rows

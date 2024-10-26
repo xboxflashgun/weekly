@@ -37,3 +37,17 @@ th,td {
 	padding: 3px 0px;
 }
 
+th.countries {
+	cursor: pointer;
+}
+
+.sortasc::after {
+	content: '\25B2';
+	color: yellow;
+}
+
+.sortdesc::after {
+	content: '\25BC';
+	color: yellow;
+}
+
