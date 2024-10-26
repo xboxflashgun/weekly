@@ -11,7 +11,8 @@ var allgames = 0;
 var sortcol = "0";		// titleid
 var sortcolord = 1;
 var sortrow = "0";		// countryid
-var sortroword = 1;
+var sortroword = -1;
+var show = "place";	// cell format: "gamers"/"perc"/"place"
 
 function main() {
 
@@ -25,7 +26,7 @@ function draw_table() {
 	// sort columns
 	var colsorted = Object.keys(gamers[sortcol]);
 
-	const sort1 = function(a, b) { return gamers[sortcol][b].gamers - gamers[sortcol][a].gamers; };
+	const sort1 = function(a, b) { return sortcolord * (gamers[sortcol][b][show] - gamers[sortcol][a][show]); };
 
 	colsorted.sort(sort1);
 	console.log('colsorted', colsorted);
@@ -34,7 +35,7 @@ function draw_table() {
 	// sort rows
 	var rowsorted = Object.keys(gamers);
 
-	const sort2 = function(a, b) { return gamers[b][sortrow].gamers - gamers[a][sortrow].gamers; };
+	const sort2 = function(a, b) { return sortroword * (gamers[b][sortrow][show] - gamers[a][sortrow][show]); };
 
 	rowsorted.sort(sort2);
 	console.log('rowsorted', rowsorted);
@@ -86,11 +87,11 @@ function draw_table() {
 	.data( (row,i) => colsorted.map( (col,j) => ({r: rowsorted[i],c: colsorted[j]}) ) )
 	.join( enter => {
 
-		enter.append('td').classed('cell', true).text( d => gamers[d.r][d.c].gamers );
+		enter.append('td').classed('cell', true).text( d => gamers[d.r][d.c][show] );
 
 	}, update => {
 
-		update.text(d => gamers[d.r][d.c].gamers);
+		update.text(d => gamers[d.r][d.c][show]);
 
 	}, exit => exit.remove()
 	);
@@ -161,22 +162,28 @@ function read_data() {
 		// calculating places and percentage
 		function pre_calc( g ) {
 
-			Object.keys(g).forEach( c => {
-				Object.keys(g[c]).forEach( t => {
+			// percentage
+			Object.keys(g).forEach( t => {
+				Object.keys(g[t]).forEach( c => {
 
-					if(c === "0")
-						if(t === "0")
-							;
-						else 
-							g[c][t].perc = g[c][t].gamers / g["0"]["0"].gamers;
+					if(t === "0")
+						g[t][c].perc = 1;
 					else
-						if(t === "0")
-							g[c][t].perc = 1;
+						if(c === "0")
+							g[t][c].perc = g[t][c].gamers / g["0"]["0"].gamers;
 						else
-							g[c][t].perc = g[c][t].gamers / g["0"]["0"].gamers;
+							g[t][c].perc = g[t][c].gamers / g["0"][c].gamers;
 	
 				});
 	
+			});
+
+			// places
+			Object.keys(g["0"]).forEach( c => {		// cycle by country for "All games"
+
+				var place = 1;
+				Object.keys(g).toSorted( (a,b) => g[b][c].gamers - g[a][c].gamers ).map( t => (t === "0") ? 0 : g[t][c].place = place++);
+
 			});
 
 		}
