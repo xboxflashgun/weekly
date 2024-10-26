@@ -28,3 +28,12 @@ th,td {
     color: #f00;
 }
 
+.box {
+	border: 1px solid #bbb;
+	padding: 2px 10px;
+}
+
+#params {
+	padding: 3px 0px;
+}
+

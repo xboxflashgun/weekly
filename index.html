@@ -11,10 +11,16 @@
 	<script src="scripts.js"></script>
 </head>
 <body onload="main()">
-	<div>
-		<label><input type="radio" name="valform" value="place" checked>Place</label>
-		<label><input type="radio" name="valform" value="perc">Percantage</label>
-		<label><input type="radio" name="valform" value="abs">Absolute</label>
+	<div id="params">
+		<span class="box">
+			Show: 
+			<label><input type="radio" name="valform" value="place" checked>Place</label>
+			<label><input type="radio" name="valform" value="perc">Percantage</label>
+			<label><input type="radio" name="valform" value="gamers">Gamers</label>
+		</span>
+		<span class="box">
+			<label><input type="checkbox" name="showdiff" checked>Show difference with previous week</label>
+		</span>
 	</div>
 	<div>
 		<table id="maintable">

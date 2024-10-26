@@ -25,6 +25,10 @@ function draw_table() {
 
 	///////////////
 	// sort columns
+	show = d3.select('input[name="valform"]:checked').property("value");
+	showdiff = d3.select('input[name="showdiff"]').property("checked");
+	console.log('show', show);
+
 	var colsorted = Object.keys(gamers[sortcol]);
 
 	const sort1 = function(a, b) { return sortcolord * (gamers[sortcol][b][show] - gamers[sortcol][a][show]); };
@@ -39,6 +43,9 @@ function draw_table() {
 	const sort2 = function(a, b) { return sortroword * (gamers[b][sortrow][show] - gamers[a][sortrow][show]); };
 
 	rowsorted.sort(sort2);
+	if(show === "place")
+		rowsorted.reverse();
+
 	console.log('rowsorted', rowsorted);
 
 	//////
@@ -116,6 +123,12 @@ function draw_table() {
 
 	}, exit => exit.remove()
 	);
+
+	///////////
+	// events
+	
+	d3.selectAll('input[type="checkbox"]').on('change', draw_table);
+	d3.selectAll('input[type="radio"]').on('change', draw_table);
 
 }
 
