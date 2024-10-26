@@ -68,11 +68,11 @@ function draw_table() {
 	.data( row => Object.keys(gamers[row]).map( col => { return({ c: col, r: row }) } ) )
 	.join( enter => {
 
-		enter.append('td').classed('cell', true).text( d => gamers[d.r][d.c] );
+		enter.append('td').classed('cell', true).text( d => gamers[d.r][d.c].gamers );
 
 	}, update => {
 
-		update.text(d => d);
+		update.text(d => gamers[d.r][d.c].gamers);
 
 	}, exit => exit.remove()
 	);
@@ -97,14 +97,14 @@ var strparser = [
 		row[0] = (row[0] === '\\N') ? "0" : row[0];		// countryid
 		row[1] = (row[1] === '\\N') ? "0" : row[1];		// titleid
 		gamers[row[1]] ??= {};
-		gamers[row[1]][row[0]] = +row[2];
+		gamers[row[1]][row[0]] = { gamers: +row[2] };
 	},
 	s => {		// previous week
 		var row = s.split('\t');
 		row[0] = (row[0] === '\\N') ? "0" : row[0];
 		row[1] = (row[1] === '\\N') ? "0" : row[1];
 		prevweek[row[1]] ??= {};
-		prevweek[row[1]][row[0]] = +row[2];
+		prevweek[row[1]][row[0]] = { gamers: +row[2] };
 	},
 ];
 
@@ -137,6 +137,33 @@ function read_data() {
 		titleids["0"] = [ 'All games', allgames ];
 		console.log(titleids);
 		console.log(countries);
+
+		// calculating places and percentage
+		function pre_calc( g ) {
+
+			Object.keys(g).forEach( c => {
+				Object.keys(g[c]).forEach( t => {
+
+					if(c === "0")
+						if(t === "0")
+							;
+						else 
+							g[c][t].perc = g[c][t].gamers / g["0"]["0"].gamers;
+					else
+						if(t === "0")
+							g[c][t].perc = 1;
+						else
+							g[c][t].perc = g[c][t].gamers / g["0"]["0"].gamers;
+	
+				});
+	
+			});
+
+		}
+
+		pre_calc(gamers);
+		pre_calc(prevweek);
+
 		console.log(gamers);
 		console.log(prevweek);
 
