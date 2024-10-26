@@ -27,14 +27,12 @@ function draw_table() {
 	// sort columns
 	show = d3.select('input[name="valform"]:checked').property("value");
 	showdiff = d3.select('input[name="showdiff"]').property("checked");
-	console.log('show', show);
 
 	var colsorted = Object.keys(gamers[sortcol]);
 
 	const sort1 = function(a, b) { return sortcolord * (gamers[sortcol][b][show] - gamers[sortcol][a][show]); };
 
 	colsorted.sort(sort1);
-	console.log('colsorted', colsorted);
 
 	////////////
 	// sort rows
@@ -45,8 +43,6 @@ function draw_table() {
 	rowsorted.sort(sort2);
 	if(show === "place")
 		rowsorted.reverse();
-
-	console.log('rowsorted', rowsorted);
 
 	//////
 	// format cells to .cell
@@ -74,11 +70,13 @@ function draw_table() {
 	.data(colsorted)
 	.join( enter => {
 	
-		var th = enter.append('th').classed('countries', true)
-			.text(d => countries[d][0]);
+		var th = enter.append('th').classed('countries', true);
+		th.attr("data-id", d => d);
+		th.text(d => countries[d][0]);
 	
 	}, update => {
 
+		update.attr("data-id", d => d);
 		update.text(d => countries[d][0]);
 
 	}, exit => {
@@ -126,9 +124,22 @@ function draw_table() {
 
 	///////////
 	// events
-	
 	d3.selectAll('input[type="checkbox"]').on('change', draw_table);
 	d3.selectAll('input[type="radio"]').on('change', draw_table);
+
+	/////////
+	// header sort
+	d3.selectAll("th.countries").on('click', e => {
+
+		var newrow = e.target.dataset.id;
+		if( newrow === sortrow )
+			sortroword = -sortroword;
+		else
+			[ sortrow, sortroword ] = [ newrow, 1 ];
+
+		draw_table();
+
+	});
 
 }
 
@@ -190,8 +201,6 @@ function read_data() {
 
 		countries["0"] = [ 'World', 'World', allcountries ];
 		titleids["0"] = [ 'All games', allgames ];
-		console.log(titleids);
-		console.log(countries);
 
 		// calculating places and percentage
 		function pre_calc( g ) {
