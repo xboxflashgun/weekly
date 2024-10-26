@@ -11,8 +11,8 @@ var allgames = 0;
 var sortcol = "0";		// titleid
 var sortcolord = 1;
 var sortrow = "0";		// countryid
-var sortroword = -1;
-var show = "place";	// cell format: "gamers"/"perc"/"place"
+var sortroword = 1;
+var show = "gamers";	// cell format: "gamers"/"perc"/"place"
 var showdiff = true;	// show difference with previous week
 
 function main() {
@@ -48,8 +48,14 @@ function draw_table() {
 		if(gamers[t][c][show]) {
 
 			gamers[t][c].cell = `${gamers[t][c][show]}`;
-			if(showdiff && prevweek[t])
-				gamers[t][c].cell += `<sup>${prevweek[t][c][show]}</sup>`;
+			if(showdiff && prevweek[t] && gamers[t][c][show] !== prevweek[t][c][show])  {
+
+				var grew = (gamers[t][c][show] > prevweek[t][c][show]);
+				grew = (show === "place") ? !grew : grew;
+
+				gamers[t][c].cell += `<sup class="${ grew ? "arrowup" : "arrowdown"}">${ grew ? '+' : '' }${gamers[t][c][show] - prevweek[t][c][show]}</sup>`;
+
+			}
 
 		}
 
