@@ -8,9 +8,9 @@ var grouped;
 var allcountries = 0;
 var allgames = 0;
 
-var sortcolnum = 1;
+var sortcol = "0";		// titleid
 var sortcolord = 1;
-var sortrownum = 1;
+var sortrow = "0";		// countryid
 var sortroword = 1;
 
 function main() {
@@ -21,10 +21,28 @@ function main() {
 
 function draw_table() {
 
+	///////////////
+	// sort columns
+	var colsorted = Object.keys(gamers[sortcol]);
+
+	const sort1 = function(a, b) { return gamers[sortcol][b].gamers - gamers[sortcol][a].gamers; };
+
+	colsorted.sort(sort1);
+	console.log('colsorted', colsorted);
+
+	////////////
+	// sort rows
+	var rowsorted = Object.keys(gamers);
+
+	const sort2 = function(a, b) { return gamers[b][sortrow].gamers - gamers[a][sortrow].gamers; };
+
+	rowsorted.sort(sort2);
+	console.log('rowsorted', rowsorted);
+
 	//////////////
 	// draw header
 	d3.select("#maintable thead tr").selectAll('th.countries')
-	.data(Object.keys(countries))
+	.data(colsorted)
 	.join( enter => {
 	
 		var th = enter.append('th').classed('countries', true)
@@ -43,16 +61,16 @@ function draw_table() {
 	/////////////
 	// draw rows
 	var rows = d3.select("#maintable tbody").selectAll('tr')
-	.data(Object.keys(gamers))
+	.data(rowsorted)
 	.join( enter => {
 
 		var tr = enter.append('tr');
 		var td = tr.append('td');
-		td.text(d => titleids[d]);
+		td.text(d => titleids[d][0]);
 
 	}, update => {
 
-		update.text(d => titleids[d]);
+		update.text(d => titleids[d][0]);
 
 	}, exit => {
 
@@ -65,7 +83,7 @@ function draw_table() {
 	/////////////
 	// draw cells
 	rows.selectAll('td.cell')
-	.data( row => Object.keys(gamers[row]).map( col => { return({ c: col, r: row }) } ) )
+	.data( (row,i) => colsorted.map( (col,j) => ({r: rowsorted[i],c: colsorted[j]}) ) )
 	.join( enter => {
 
 		enter.append('td').classed('cell', true).text( d => gamers[d.r][d.c].gamers );
@@ -78,6 +96,7 @@ function draw_table() {
 	);
 
 }
+
 
 var strparser = [
 	0,
@@ -107,6 +126,7 @@ var strparser = [
 		prevweek[row[1]][row[0]] = { gamers: +row[2] };
 	},
 ];
+
 
 function read_data() {
 
