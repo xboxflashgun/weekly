@@ -18,4 +18,13 @@ th,td {
 	padding: 0px 9px;
 }
 
+.arrowup::before    {
+    content: '\25B2';
+    color: #0b0;
+}
+
+.arrowdown::before   {
+    content: '\25BC';
+    color: #f00;
+}
 
