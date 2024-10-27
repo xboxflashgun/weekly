@@ -60,7 +60,9 @@ function draw_table() {
 				var grew = (gamers[t][c][show] > prevweek[t][c][show]);
 				grew = (show === "place") ? !grew : grew;
 
-				gamers[t][c].cell += `<sup class="${ grew ? "arrowup" : "arrowdown"}">${ grew ^ (show === "place")? '+' : '' }${gamers[t][c][show] - prevweek[t][c][show]}</sup>`;
+				gamers[t][c].cell += `<sup class="${ grew ? "arrowup" : "arrowdown"}">`
+					+ `${ grew ^ (show === "place")? '+' : '' }`
+					+ `${gamers[t][c][show] - prevweek[t][c][show]}</sup>`;
 
 			}
 
@@ -94,18 +96,18 @@ function draw_table() {
 
 	/////////////
 	// draw rows
-	var rows = d3.select("#maintable tbody").selectAll('tr')
+	d3.select("#maintable tbody").selectAll('tr')
 	.data(rowsorted)
 	.join( enter => {
 
 		var tr = enter.append('tr');
-		var td = tr.append('td');
+		var td = tr.append('td').attr('data-id', d => d);
 		td.text(d => titleids[d][0]);
 
 	}, update => {
 
 		var td = update.select("td");
-		td.text(d => titleids[d][0]);
+		td.attr('data-id', d => d).text(d => titleids[d][0]);
 
 	}, exit => {
 
@@ -113,11 +115,22 @@ function draw_table() {
 
 	});
 
-	rows = d3.select("#maintable tbody").selectAll('tr');
+	d3.select("#maintable tbody").selectAll('tr td').on('click', e => {
+
+		var newcol = e.target.dataset.id;
+		if( newcol === sortcol )
+			sortcolord = -sortcolord;
+		else
+			[ sortcol, sortcolord ] = [ newcol, 1 ];
+
+		draw_table();
+
+	});
+
 
 	/////////////
 	// draw cells
-	rows.selectAll('td.cell')
+	d3.select("#maintable tbody").selectAll('tr').selectAll('td.cell')
 	.data( (row,i) => colsorted.map( (col,j) => ({r: rowsorted[i],c: colsorted[j]}) ) )
 	.join( enter => {
 
@@ -143,7 +156,7 @@ function draw_table() {
 		if( newrow === sortrow )
 			sortroword = -sortroword;
 		else
-			[ sortrow, sortroword ] = [ newrow, 1 ];
+			[ sortrow, sortroword ] = [ newrow, (show === "place") ? -1 : 1 ];
 
 		draw_table();
 
