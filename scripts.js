@@ -179,7 +179,10 @@ function draw_table() {
 	// hide filtered out rows
 	d3.select("#maintable tbody").selectAll('tr').each( function(t) { 
 
-		d3.select(this).style("display", (filtstr.length > 0 && titleids[t][0].toLowerCase().indexOf(filtstr) < 0) ? "none" : null);
+		d3.select(this).style("display", (
+			(filtstr.length > 0 && titleids[t][0].toLowerCase().indexOf(filtstr) < 0)
+			|| (show === "place" && t === "0")
+			) ? "none" : null);
 
 	});
 
