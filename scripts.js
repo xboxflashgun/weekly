@@ -2,6 +2,7 @@ var titleids = {};		// titleids[] = { titleid: titleid, name: name, gamers: game
 var countries = {};		// countries[] = { coutry: country, countryname: countryname, gamers: gamers }
 var gamers = {};		// gamers[] = { titleid: titleid, countryid: countryid, gamers: gamers }
 var prevweek = {};		// same as gamers for previous week
+var devices = [];		// devices[devid] = { gamers, games, devname }
 
 var grouped;
 
@@ -14,9 +15,11 @@ var sortrow = "0";		// countryid
 var sortroword = 1;
 var show = "gamers";	// cell format: "gamers"/"perc"/"place"
 var showdiff = true;	// show difference with previous week
+var devsel = new Set;
 
 function main() {
 
+	// devsel.add(2);
 	read_data();
 
 }
@@ -27,6 +30,8 @@ function draw_table() {
 	// sort columns
 	show = d3.select('input[name="valform"]:checked').property("value");
 	showdiff = d3.select('input[name="showdiff"]').property("checked");
+
+	var filtstr = d3.select("#filter").property("value").toLowerCase();
 
 	var colsorted = Object.keys(gamers[sortcol]);
 
@@ -96,6 +101,7 @@ function draw_table() {
 
 	/////////////
 	// draw rows
+	
 	d3.select("#maintable tbody").selectAll('tr')
 	.data(rowsorted)
 	.join( enter => {
@@ -162,6 +168,21 @@ function draw_table() {
 
 	});
 
+	/////////
+	// filter
+	d3.select("#filter").on('input', e => {
+
+		draw_table();
+
+	});
+
+	// hide filtered out rows
+	d3.select("#maintable tbody").selectAll('tr').each( function(t) { 
+
+		d3.select(this).style("display", (filtstr.length > 0 && titleids[t][0].toLowerCase().indexOf(filtstr) < 0) ? "none" : null);
+
+	});
+
 }
 
 
@@ -170,27 +191,31 @@ var strparser = [
 	s => {		// titleids
 		var row = s.split('\t');
 		row[0] = (row[0] === '\\N') ? "0" : row[0];
-		titleids[row[0]] = [ row[1], +row[2] ] ;
-		allgames += +row[2];
+		titleids[row[0]] = [ row[2], +row[1] ] ;
+		allgames += +row[1];
 	},
 	s => {		// countries
 		var row = s.split('\t');
-		countries[row[0]] = [ row[1], row[2], +row[3] ];
+		countries[row[1]] = [ row[2], row[3], +row[0] ];
 		allcountries += +row[3];
+	},
+	s => {		// devices
+		var row = s.split('\t');
+		devices[row[2]] = { gamers: row[0], games: row[1], devname: row[3] };
 	},
 	s => {		// gamers
 		var row = s.split('\t');
-		row[0] = (row[0] === '\\N') ? "0" : row[0];		// countryid
-		row[1] = (row[1] === '\\N') ? "0" : row[1];		// titleid
-		gamers[row[1]] ??= {};
-		gamers[row[1]][row[0]] = { gamers: +row[2] };
+		row[1] = (row[1] === '\\N') ? "0" : row[1];		// countryid
+		row[0] = (row[0] === '\\N') ? "0" : row[0];		// titleid
+		gamers[row[0]] ??= {};
+		gamers[row[0]][row[1]] = { gamers: +row[2] };
 	},
 	s => {		// previous week
 		var row = s.split('\t');
-		row[0] = (row[0] === '\\N') ? "0" : row[0];
 		row[1] = (row[1] === '\\N') ? "0" : row[1];
-		prevweek[row[1]] ??= {};
-		prevweek[row[1]][row[0]] = { gamers: +row[2] };
+		row[0] = (row[0] === '\\N') ? "0" : row[0];
+		prevweek[row[0]] ??= {};
+		prevweek[row[0]][row[1]] = { gamers: +row[2] };
 	},
 ];
 
@@ -199,8 +224,10 @@ function read_data() {
 
 	var pr = [];
 
-	for( let i = 1; i != 5; i++ )
-		pr.push(fetch("api/gettsv.php?tab=week" + i)
+	var devids = (devsel.size > 0) ? `&devids=${Array.from(devsel).join(',')}` : '';
+
+	for( let i = 1; i != 6; i++ )
+		pr.push(fetch("api/gettsv.php?tab=week" + i + devids)
 			.then(res => res.text())
 			.then(res => {
 
@@ -222,6 +249,10 @@ function read_data() {
 
 		countries["0"] = [ 'World', 'World', allcountries ];
 		titleids["0"] = [ 'All games', allgames ];
+
+		// console.log(titleids);
+		// console.log(countries);
+		// console.log(devices);
 
 		// calculating places and percentage
 		function pre_calc( g ) {
@@ -255,8 +286,9 @@ function read_data() {
 		pre_calc(gamers);
 		pre_calc(prevweek);
 
+		console.log(titleids);
 		console.log(gamers);
-		console.log(prevweek);
+		// console.log(prevweek);
 
 		draw_table();
 
