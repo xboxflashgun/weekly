@@ -18,6 +18,19 @@ if(preg_match('/^(week\d+)$/', $_GET['tab'], $matches))
 else
 	die("Oops");
 
-echo implode(pg_copy_to($db, "( select * from $tab )", chr(9)));
+$req = "";
+
+if($tab == "week4" or $tab == "week5") {
+	
+	$dev = "";
+	if(isset($_GET["devids"]))
+		$dev = "where devid=any(array[" . $_GET["devids"] . "])";
+
+	$req = "select titleid,countryid,sum(gamers) from $tab $dev group by 1,2";
+
+} else
+	$req = "select * from $tab";
+
+echo implode(pg_copy_to($db, "( $req )", chr(9)));
 
 ?>
