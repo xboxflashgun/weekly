@@ -51,3 +51,11 @@ th.countries {
 	color: yellow;
 }
 
+#maintable tbody td:nth-child(n+2) {
+	text-align: right;
+	cursor: default;
+}
+
+#maintable tbody td:nth-child(1) {
+	cursor: pointer;
+}
