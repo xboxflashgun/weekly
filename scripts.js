@@ -53,13 +53,44 @@ function draw_table() {
 	if(show === "place")
 		colsorted.forEach( c => gamers["0"][c][show] = undefined );
 
+	////////////////////////
+	// format cells function
+	function compact(num) {
+
+		if(compactsel >= 0)
+			return new Intl.NumberFormat('en-US', { maximumFractionDigits: compactsel, notation: 'compact' }).format(num)
+		else
+			return num;
+
+	}
+
+	var allgamers = gamers["0"]["0"].gamers;
+	function compact_perc( num )  {
+
+		if(compactsel >= 0)
+			return (100*num).toFixed(compactsel) + '%';
+		else
+			return (100*num).toFixed((base >= 10) ? Math.log10(allgamers) || 0 : 0);
+
+	}
+
+
+	var fff;	// format function
+	var compactsel = 2;
+	if(show === "place")
+		fff = d => d;
+	else if(show === "perc")
+		fff = compact_perc;
+	else
+		fff = compact;
+
 	//////
 	// format cells to .cell
 	Object.keys(gamers).map(t => Object.keys(gamers[t]).map(c => {
 
 		if(gamers[t][c][show]) {
 
-			gamers[t][c].cell = `${gamers[t][c][show]}`;
+			gamers[t][c].cell = `${fff(gamers[t][c][show])}`;
 			if(showdiff && prevper[t] && gamers[t][c][show] !== prevper[t][c][show])  {
 
 				var grew = (gamers[t][c][show] > prevper[t][c][show]);
@@ -67,7 +98,7 @@ function draw_table() {
 
 				gamers[t][c].cell += `<sup class="${ grew ? "arrowup" : "arrowdown"}">`
 					+ `${ grew ^ (show === "place")? '+' : '' }`
-					+ `${gamers[t][c][show] - prevper[t][c][show]}</sup>`;
+					+ `${fff(gamers[t][c][show] - prevper[t][c][show])}</sup>`;
 
 			}
 
