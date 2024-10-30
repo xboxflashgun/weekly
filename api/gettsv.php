@@ -13,23 +13,21 @@ $db = pg_connect("port=6432 host=/tmp dbname=global user=readonly password=masha
 
 $rep = "";
 
-if(preg_match('/^(week\d+)$/', $_GET['tab'], $matches))
-	$tab = $matches[1];
-else
-	die("Oops");
+$tab = $_GET["tab"];
+$num = $_GET["num"];
 
 $req = "";
 
-if($tab == "week4" or $tab == "week5") {
+if($num >=  4) {
 	
 	$dev = "";
 	if(isset($_GET["devids"]))
 		$dev = "where devid=any(array[" . $_GET["devids"] . "])";
 
-	$req = "select titleid,countryid,sum(gamers) from $tab $dev group by 1,2";
+	$req = "select titleid,countryid,sum(gamers) from mv_$tab$num $dev group by 1,2";
 
 } else
-	$req = "select * from $tab";
+	$req = "select * from mv_$tab$num";
 
 echo implode(pg_copy_to($db, "( $req )", chr(9)));
 

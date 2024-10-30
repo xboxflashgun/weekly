@@ -1,7 +1,7 @@
 var titleids = {};		// titleids[] = { titleid: titleid, name: name, gamers: gamers }
 var countries = {};		// countries[] = { coutry: country, countryname: countryname, gamers: gamers }
 var gamers = {};		// gamers[] = { titleid: titleid, countryid: countryid, gamers: gamers }
-var prevweek = {};		// same as gamers for previous week
+var prevper = {};		// same as gamers for previous period
 var devices = [];		// devices[devid] = { gamers, games, devname }
 
 var grouped;
@@ -14,7 +14,7 @@ var sortcolord = 1;
 var sortrow = "0";		// countryid
 var sortroword = 1;
 var show = "gamers";	// cell format: "gamers"/"perc"/"place"
-var showdiff = true;	// show difference with previous week
+var showdiff = true;	// show difference with previous period
 var devsel = new Set;
 
 function main() {
@@ -60,14 +60,14 @@ function draw_table() {
 		if(gamers[t][c][show]) {
 
 			gamers[t][c].cell = `${gamers[t][c][show]}`;
-			if(showdiff && prevweek[t] && gamers[t][c][show] !== prevweek[t][c][show])  {
+			if(showdiff && prevper[t] && gamers[t][c][show] !== prevper[t][c][show])  {
 
-				var grew = (gamers[t][c][show] > prevweek[t][c][show]);
+				var grew = (gamers[t][c][show] > prevper[t][c][show]);
 				grew = (show === "place") ? !grew : grew;
 
 				gamers[t][c].cell += `<sup class="${ grew ? "arrowup" : "arrowdown"}">`
 					+ `${ grew ^ (show === "place")? '+' : '' }`
-					+ `${gamers[t][c][show] - prevweek[t][c][show]}</sup>`;
+					+ `${gamers[t][c][show] - prevper[t][c][show]}</sup>`;
 
 			}
 
@@ -213,12 +213,12 @@ var strparser = [
 		gamers[row[0]] ??= {};
 		gamers[row[0]][row[1]] = { gamers: +row[2] };
 	},
-	s => {		// previous week
+	s => {		// previous period
 		var row = s.split('\t');
 		row[1] = (row[1] === '\\N') ? "0" : row[1];
 		row[0] = (row[0] === '\\N') ? "0" : row[0];
-		prevweek[row[0]] ??= {};
-		prevweek[row[0]][row[1]] = { gamers: +row[2] };
+		prevper[row[0]] ??= {};
+		prevper[row[0]][row[1]] = { gamers: +row[2] };
 	},
 ];
 
@@ -230,7 +230,7 @@ function read_data() {
 	var devids = (devsel.size > 0) ? `&devids=${Array.from(devsel).join(',')}` : '';
 
 	for( let i = 1; i != 6; i++ )
-		pr.push(fetch("api/gettsv.php?tab=week" + i + devids)
+		pr.push(fetch(`api/gettsv.php?tab=day&num=${i}${devids}`)
 			.then(res => res.text())
 			.then(res => {
 
@@ -287,11 +287,11 @@ function read_data() {
 		}
 
 		pre_calc(gamers);
-		pre_calc(prevweek);
+		pre_calc(prevper);
 
 		console.log(titleids);
 		console.log(gamers);
-		// console.log(prevweek);
+		// console.log(prevper);
 
 		draw_table();
 
