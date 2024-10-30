@@ -19,7 +19,7 @@ var devsel = new Set;
 
 function main() {
 
-	// devsel.add(2);
+	devsel.add(10);
 	read_data();
 
 }
@@ -84,7 +84,7 @@ function draw_table() {
 	else
 		fff = compact;
 
-	//////
+	////////////////////////
 	// format cells to .cell
 	Object.keys(gamers).map(t => Object.keys(gamers[t]).map(c => {
 
@@ -102,7 +102,8 @@ function draw_table() {
 
 			}
 
-		}
+		} else
+			gamers[t][c].cell = '';
 
 	}));
 	
@@ -323,11 +324,34 @@ function read_data() {
 
 		}
 
+		// remove empty strings
+		Object.keys(gamers).forEach( t => {
+
+			if(gamers[t])
+				if(! gamers[t]["0"] || (gamers[t]["0"] && gamers[t]["0"].gamers === 0)) {
+
+					delete gamers[t];
+					delete prevper[t];
+
+				}
+			if(prevper[t])
+				if(! prevper[t]["0"] || (prevper[t]["0"] && prevper[t]["0"].gamers === 0))
+					delete prevper[t];
+
+		});
+		// remove strings from prevper missed in gamers
+		Object.keys(prevper).forEach( t => {
+
+			if(! gamers[t])
+				delete prevper[t];
+
+		});
+
 		pre_calc(gamers);
+		console.log('gamers', gamers);
+		console.log('prevper', prevper);
 		pre_calc(prevper);
 
-		console.log(titleids);
-		console.log(gamers);
 		// console.log(prevper);
 
 		draw_table();
