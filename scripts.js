@@ -19,7 +19,7 @@ var devsel = new Set;
 
 function main() {
 
-	devsel.add(10);
+	devsel.add("10");
 	read_data();
 
 }
@@ -33,6 +33,7 @@ function draw_table() {
 
 	var filtstr = d3.select("#filter").property("value").toLowerCase();
 
+	console.log('36', gamers);
 	var colsorted = Object.keys(gamers[sortcol]);
 
 	const sort1 = function(a, b) { return sortcolord * (gamers[sortcol][b][show] - gamers[sortcol][a][show]); };
@@ -183,8 +184,8 @@ function draw_table() {
 
 	///////////
 	// events
-	d3.selectAll('input[type="checkbox"]').on('change', draw_table);
-	d3.selectAll('input[type="radio"]').on('change', draw_table);
+	d3.selectAll('#params input[type="checkbox"]').on('change', draw_table);
+	d3.selectAll('#params input[type="radio"]').on('change', draw_table);
 	d3.selectAll('#maintable span.clearstr').on('click', e => {
 
 		d3.select("#filter").property("value", "");
@@ -242,7 +243,7 @@ var strparser = [
 	},
 	s => {		// devices
 		var row = s.split('\t');
-		devices[row[2]] = { gamers: row[0], games: row[1], devname: row[3] };
+		devices[row[2]] = { gamers: row[0], games: row[1], devname: row[3], devid: row[2] };
 	},
 	s => {		// gamers
 		var row = s.split('\t');
@@ -260,10 +261,73 @@ var strparser = [
 	},
 ];
 
+////////////////
+// devices table
+function draw_devices() {
+
+	d3.select("#devtable tbody").selectAll("tr")
+	.data(devices.filter( d => d))
+	.join( enter => {
+		
+		var tr = enter.append('tr');
+		tr.attr('data-id', d => d.devid);
+		tr.append('td').append('input').property('type', 'checkbox').attr('data-id', d => d.devid).property('checked', d => devsel.has(d.devid));
+		tr.append('td').text(d => d.devname);
+		tr.append('td').text(d => d.gamers);
+		tr.append('td').text(d => d.games);
+		
+	}, update => {
+
+		update.select('td:nth-child(1)').property('type', 'checkbox').attr('data-id', d => d.devid).property('checked', d => devsel.has(d.devid));
+		update.select('td:nth-child(2)').text(d => d.devname);
+		update.select('td:nth-child(3)').text(d => d.gamers);
+		update.select('td:nth-child(4)').text(d => d.games);
+	
+	}, exit => exit.remove()
+	);
+
+	d3.select("#devtable tbody").selectAll("tr").on('click', e => {		// click on row
+		if(e.target.tagName === 'TD') {
+		
+			var devid = e.target.parentNode.dataset.id;
+			if(devsel.has(devid))
+				devsel.delete(devid);
+			else
+				devsel.add(devid);
+			d3.select(e.target.parentNode).select('input').property('checked', devsel.has(devid));
+
+		} else {
+
+			var devid = e.target.dataset.id;
+			if(d3.select(e.target).property('checked'))
+				devsel.add(devid);
+			else
+				devsel.delete(devid);
+
+		}
+
+		read_data();
+
+	});
+
+}
+
 
 function read_data() {
 
 	var pr = [];
+
+	gamers = {};
+	prevper = {};
+	titleids = {};
+	countries = {};
+	
+	allcountries = 0;
+	allgames = 0;
+	sortcol = "0";
+	sortcolord = 1;
+	sortrow = "0";
+	sortroword = 1;
 
 	var devids = (devsel.size > 0) ? `&devids=${Array.from(devsel).join(',')}` : '';
 
@@ -355,6 +419,7 @@ function read_data() {
 		// console.log(prevper);
 
 		draw_table();
+		draw_devices();
 
 	});
 
