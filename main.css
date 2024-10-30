@@ -68,3 +68,24 @@ th.countries {
 	border-radius: 4px;
 	background-color: #666;
 }
+
+#devselect {
+	cursor: pointer;
+	color: #ddd;
+}
+
+.popupbox {
+	position: absolute;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 0px 10px 10px;
+	cursor: default;
+	background-color: #232;
+	width: auto;
+}
+
+#devtable td:nth-child(n+2) {
+	text-align: right;
+	cursor: pointer;
+}
+
