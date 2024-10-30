@@ -60,6 +60,17 @@ th.countries {
 	cursor: pointer;
 }
 
+#maintable thead {
+	position: sticky;
+	top: 0px;
+	z-index: -1;
+}
+
+#maintable th {
+	background-color: #444;
+	color: #ccc;
+}
+
 .clearstr {
 	cursor: pointer;
     padding: 0px 4px;
