@@ -127,7 +127,7 @@ function draw_table() {
 		if( newcol === sortcol )
 			sortcolord = -sortcolord;
 		else
-			[ sortcol, sortcolord ] = [ newcol, 1 ];
+			[ sortcol, sortcolord ] = [ newcol, (show === "place") ? -1 : 1 ];
 
 		draw_table();
 
