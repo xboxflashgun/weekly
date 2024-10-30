@@ -33,7 +33,6 @@ function draw_table() {
 
 	var filtstr = d3.select("#filter").property("value").toLowerCase();
 
-	console.log('36', gamers);
 	var colsorted = Object.keys(gamers[sortcol]);
 
 	const sort1 = function(a, b) { return sortcolord * (gamers[sortcol][b][show] - gamers[sortcol][a][show]); };
@@ -355,10 +354,6 @@ function read_data() {
 		countries["0"] = [ 'World', 'World', allcountries ];
 		titleids["0"] = [ 'All games', allgames ];
 
-		// console.log(titleids);
-		// console.log(countries);
-		// console.log(devices);
-
 		// calculating places and percentage
 		function pre_calc( g ) {
 
@@ -412,11 +407,7 @@ function read_data() {
 		});
 
 		pre_calc(gamers);
-		console.log('gamers', gamers);
-		console.log('prevper', prevper);
 		pre_calc(prevper);
-
-		// console.log(prevper);
 
 		draw_table();
 		draw_devices();
