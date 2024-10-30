@@ -184,6 +184,12 @@ function draw_table() {
 	// events
 	d3.selectAll('input[type="checkbox"]').on('change', draw_table);
 	d3.selectAll('input[type="radio"]').on('change', draw_table);
+	d3.selectAll('#maintable span.clearstr').on('click', e => {
+
+		d3.select("#filter").property("value", "");
+		draw_table();
+
+	});
 
 	/////////
 	// header sort

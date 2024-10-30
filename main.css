@@ -59,3 +59,12 @@ th.countries {
 #maintable tbody td:nth-child(1) {
 	cursor: pointer;
 }
+
+.clearstr {
+	cursor: pointer;
+    padding: 0px 4px;
+    color: #ddd;
+	border: 1px solid #fff;
+	border-radius: 4px;
+	background-color: #666;
+}
