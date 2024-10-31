@@ -34,11 +34,18 @@ th.countries {
 .sortasc::after {
 	content: '\25B2';
 	color: yellow;
+	font-size: 18px;
+}
+
+.sortasc,
+.sortdesc {
+	color: #eee;
 }
 
 .sortdesc::after {
 	content: '\25BC';
 	color: yellow;
+	font-size: 18px;
 }
 
 #maintable {

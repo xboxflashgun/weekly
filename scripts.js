@@ -211,7 +211,7 @@ function draw_table() {
 		if( newrow === sortrow )
 			sortroword = -sortroword;
 		else
-			[ sortrow, sortroword ] = [ newrow, (show === "place") ? -1 : 1 ];
+			[ sortrow, sortroword ] = [ newrow, 1 ] ;
 
 		draw_table();
 
