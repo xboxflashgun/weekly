@@ -164,7 +164,7 @@ function draw_table() {
 
 	});
 
-	d3.select("#maintable tbody").selectAll('tr td').on('click', e => {
+	d3.select("#maintable tbody").selectAll('tr td:first-child').on('click', e => {
 
 		var newcol = e.target.dataset.id;
 		if( newcol === sortcol )
