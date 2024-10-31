@@ -18,12 +18,21 @@ var show = "gamers";	// cell format: "gamers"/"perc"/"place"
 var showdiff = true;	// show difference with previous period
 var devsel = new Set;
 
+var compactsel = 1;
+
 function main() {
 
 	// hide device popup
 	d3.select("#devpopup").style("display", "none");
 
 	read_data();
+
+}
+
+function setcompact(e) {
+
+	compactsel = +d3.select("#compactsel option:checked").property("value");
+	draw_table();
 
 }
 
@@ -79,7 +88,6 @@ function draw_table() {
 
 
 	var fff;	// format function
-	var compactsel = 2;
 	if(show === "place")
 		fff = d => d;
 	else if(show === "perc")

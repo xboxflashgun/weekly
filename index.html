@@ -22,7 +22,12 @@
 			<label><input type="checkbox" name="showdiff" checked>Show difference with previous week</label>
 		</span>
 		<span class="box">
-			Compact numbers: no
+			Compact numbers: <select onchange="setcompact()" id="compactsel">
+				<option value="-1">no</option>
+				<option value="0">0</option>
+				<option value="1" selected>1</option>
+				<option value="2">2</option>
+			</select>
 		</span>
 		<span class="box">
 			Devices: <span id="devselect">All</span>
