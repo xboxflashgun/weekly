@@ -164,6 +164,10 @@ function draw_table() {
 
 	});
 
+	d3.select("#maintable tbody .sortright").classed("sortright", false);
+	d3.select("#maintable tbody .sortleft").classed("sortleft", false);
+	d3.select("#maintable tbody").selectAll(`td[data-id="${sortcol}"]`).classed( (sortcolord > 0) ? "sortright" : "sortleft", true);
+
 	d3.select("#maintable tbody").selectAll('tr td:first-child').on('click', e => {
 
 		var newcol = e.target.dataset.id;

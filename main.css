@@ -37,15 +37,31 @@ th.countries {
 	font-size: 18px;
 }
 
+.sortdesc::after {
+	content: '\25BC';
+	color: yellow;
+	font-size: 18px;
+}
+
 .sortasc,
 .sortdesc {
 	color: #eee;
 }
 
-.sortdesc::after {
-	content: '\25BC';
+.sortleft,
+.sortright {
+	color: #eee;
+}
+
+.sortright::after {
+	content: '\25C0';
 	color: yellow;
-	font-size: 18px;
+	float: inline-end;
+}
+.sortleft::after {
+	content: '\25B6';
+	color: yellow;
+	float: inline-end;
 }
 
 #maintable {
