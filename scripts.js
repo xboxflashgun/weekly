@@ -6,8 +6,9 @@ var devices = [];		// devices[devid] = { gamers, games, devname }
 
 var grouped;
 
-var allcountries = 0;
-var allgames = 0;
+var allcountries;
+var allgames;
+var alldevices;
 
 var sortcol = "0";		// titleid
 var sortcolord = 1;
@@ -19,7 +20,9 @@ var devsel = new Set;
 
 function main() {
 
-	devsel.add("10");
+	// hide device popup
+	d3.select("#devpopup").style("display", "none");
+
 	read_data();
 
 }
@@ -243,6 +246,7 @@ var strparser = [
 	s => {		// devices
 		var row = s.split('\t');
 		devices[row[2]] = { gamers: row[0], games: row[1], devname: row[3], devid: row[2] };
+		alldevices++;
 	},
 	s => {		// gamers
 		var row = s.split('\t');
@@ -309,6 +313,10 @@ function draw_devices() {
 
 	});
 
+	d3.select("#devselect").text( devsel.size ? `${devsel.size} / ${alldevices}` : "All" )
+	.on('click', e =>  d3.select("#devpopup").style("display", null));
+	d3.select("#devpopup .winclose").on('click', e => d3.select("#devpopup").style("display", "none"));
+
 }
 
 
@@ -323,6 +331,7 @@ function read_data() {
 	
 	allcountries = 0;
 	allgames = 0;
+	alldevices = 0;
 	sortcol = "0";
 	sortcolord = 1;
 	sortrow = "0";
