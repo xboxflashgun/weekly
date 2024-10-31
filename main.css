@@ -8,16 +8,6 @@ body {
 	background-color: #222;
 }
 
-table {
-	border: 1px solid #bbb;
-	border-collapse: collapse;
-}
-
-th,td {
-	border: 1px solid #bbb;
-	padding: 0px 9px;
-}
-
 .arrowup::before    {
     content: '\25B2';
     color: #0b0;
@@ -51,6 +41,35 @@ th.countries {
 	color: yellow;
 }
 
+#maintable {
+	border-collapse: separate;
+	border-spacing: 0;
+	width: 100%;
+}
+
+#maintable th {
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	padding: 0px 5px;
+}
+
+#maintable td {
+	border-bottom: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+}
+
+#maintable th:first-child,
+#maintable td:first-child {
+	border-left: 1px solid #ddd;
+}
+
+#maintable thead th {
+	position: sticky;
+	top: 0px;
+	background-color: #444;
+}
+
 #maintable tbody td:nth-child(n+2) {
 	text-align: right;
 	cursor: default;
@@ -58,17 +77,6 @@ th.countries {
 
 #maintable tbody td:nth-child(1) {
 	cursor: pointer;
-}
-
-#maintable thead {
-	position: sticky;
-	top: 0px;
-	z-index: -1;
-}
-
-#maintable th {
-	background-color: #444;
-	color: #ccc;
 }
 
 .clearstr {
@@ -91,8 +99,21 @@ th.countries {
 	border-radius: 5px;
 	padding: 0px 10px 10px;
 	cursor: default;
-	background-color: #232;
+	background-color: #252;
 	width: auto;
+	top: 40px;
+	left: 800px;
+}
+
+#devtable {
+	border: 1px solid #ddd;
+	border-collapse: collapse;
+}
+
+#devtable td,
+#devtable th {
+	border: 1px solid #ddd;
+	padding: 0px 6px;
 }
 
 #devtable td:nth-child(n+2) {
