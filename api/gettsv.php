@@ -24,7 +24,7 @@ if($num >=  4) {
 	if(isset($_GET["devids"]))
 		$dev = "where devid=any(array[" . $_GET["devids"] . "])";
 
-	$req = "select titleid,countryid,sum(gamers) from mv_$tab$num $dev group by 1,2";
+	$req = "select titleid,countryid,sum(gamers),sum(secs) from mv_$tab$num $dev group by 1,2";
 
 } else
 	$req = "select * from mv_$tab$num";

@@ -8,3 +8,8 @@ Enhanced version of https://www.trueachievements.com/n35488/introducing-the-xbox
  * top-500 games shown
 
 Details will be available later I hope
+
+2do:
+
+ * click on cell
+ * info on hours played

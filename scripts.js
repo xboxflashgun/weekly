@@ -260,19 +260,19 @@ var strparser = [
 		devices[row[2]] = { gamers: row[0], games: row[1], devname: row[3], devid: row[2] };
 		alldevices++;
 	},
-	s => {		// gamers
+	s => {		// gamers [ titleid, countryid, gamers, secs ]
 		var row = s.split('\t');
 		row[1] = (row[1] === '\\N') ? "0" : row[1];		// countryid
 		row[0] = (row[0] === '\\N') ? "0" : row[0];		// titleid
 		gamers[row[0]] ??= {};
-		gamers[row[0]][row[1]] = { gamers: +row[2] };
+		gamers[row[0]][row[1]] = { gamers: +row[2], avghours: (+row[2] > 0) ? +row[3]/3600./+row[2] : 0};
 	},
 	s => {		// previous period
 		var row = s.split('\t');
 		row[1] = (row[1] === '\\N') ? "0" : row[1];
 		row[0] = (row[0] === '\\N') ? "0" : row[0];
 		prevper[row[0]] ??= {};
-		prevper[row[0]][row[1]] = { gamers: +row[2] };
+		prevper[row[0]][row[1]] = { gamers: +row[2], avghours: (+row[2] > 0) ? +row[3]/3600./+row[2] : 0 };
 	},
 ];
 
@@ -432,6 +432,8 @@ function read_data() {
 
 		draw_table();
 		draw_devices();
+
+		console.log(gamers);
 
 	});
 
