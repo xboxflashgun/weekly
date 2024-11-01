@@ -1,8 +1,8 @@
-var titleids = {};		// titleids[] = { titleid: titleid, name: name, gamers: gamers }
+var titleids = {};		// titleids[] = { titleid: titleid, name: name, gamers: gamers secs: secs}
 var countries = {};		// countries[] = { coutry: country, countryname: countryname, gamers: gamers }
 var gamers = {};		// gamers[] = { titleid: titleid, countryid: countryid, gamers: gamers }
 var prevper = {};		// same as gamers for previous period
-var devices = [];		// devices[devid] = { gamers, games, devname }
+var devices = {};		// devices[devid] = { gamers, games, devname }
 
 var grouped;
 
@@ -14,7 +14,8 @@ var sortcol = "0";		// titleid
 var sortcolord = 1;
 var sortrow = "0";		// countryid
 var sortroword = 1;
-var show = "gamers";	// cell format: "gamers"/"perc"/"place"
+var show = "abs";	// cell format: "gamers"/"perc"/"place"
+var dim  = "gamers";	// table info: "gamers"/"avgh"
 var showdiff = true;	// show difference with previous period
 var devsel = new Set;
 
@@ -47,7 +48,7 @@ function draw_table() {
 
 	var colsorted = Object.keys(gamers[sortcol]);
 
-	const sort1 = function(a, b) { return sortcolord * (gamers[sortcol][b][show] - gamers[sortcol][a][show]); };
+	const sort1 = function(a, b) { return sortcolord * (gamers[sortcol][b][dim][show] - gamers[sortcol][a][dim][show]); };
 
 	colsorted.sort(sort1);
 
@@ -76,7 +77,7 @@ function draw_table() {
 
 	}
 
-	var allgamers = gamers["0"]["0"].gamers;
+	var allgamers = gamers["0"]["0"][dim].abs;
 	function compact_perc( num )  {
 
 		if(compactsel >= 0)
@@ -99,17 +100,17 @@ function draw_table() {
 	// format cells to .cell
 	Object.keys(gamers).map(t => Object.keys(gamers[t]).map(c => {
 
-		if(gamers[t][c][show]) {
+		if(gamers[t][c][dim][show]) {
 
-			gamers[t][c].cell = `${fff(gamers[t][c][show])}`;
-			if(showdiff && prevper[t] && gamers[t][c][show] !== prevper[t][c][show])  {
+			gamers[t][c].cell = `${fff(gamers[t][c][dim][show])}`;
+			if(showdiff && prevper[t] && gamers[t][c][dim][show] !== prevper[t][c][dim][show])  {
 
-				var grew = (gamers[t][c][show] > prevper[t][c][show]);
+				var grew = (gamers[t][c][dim][show] > prevper[t][c][dim][show]);
 				grew = (show === "place") ? !grew : grew;
 
 				gamers[t][c].cell += `<sup class="${ grew ? "arrowup" : "arrowdown"}">`
 					+ `${ grew ^ (show === "place")? '+' : '' }`
-					+ `${fff(gamers[t][c][show] - prevper[t][c][show])}</sup>`;
+					+ `${fff(gamers[t][c][dim][show] - prevper[t][c][dim][show])}</sup>`;
 
 			}
 
@@ -117,7 +118,7 @@ function draw_table() {
 			gamers[t][c].cell = '';
 
 	}));
-	
+
 	//////////////
 	// draw header
 	d3.select("#maintable thead tr").selectAll('th.countries')
@@ -126,12 +127,12 @@ function draw_table() {
 	
 		var th = enter.append('th').classed('countries', true);
 		th.attr("data-id", d => d);
-		th.text(d => countries[d][0]);
+		th.text(d => countries[d].country);
 	
 	}, update => {
 
 		update.attr("data-id", d => d);
-		update.text(d => countries[d][0]);
+		update.text(d => countries[d].country);
 
 	}, exit => {
 
@@ -151,12 +152,12 @@ function draw_table() {
 
 		var tr = enter.append('tr');
 		var td = tr.append('td').attr('data-id', d => d);
-		td.text(d => titleids[d][0]);
+		td.text(d => titleids[d].name);
 
 	}, update => {
 
 		var td = update.select("td");
-		td.attr('data-id', d => d).text(d => titleids[d][0]);
+		td.attr('data-id', d => d).text(d => titleids[d].name);
 
 	}, exit => {
 
@@ -184,7 +185,7 @@ function draw_table() {
 	/////////////
 	// draw cells
 	d3.select("#maintable tbody").selectAll('tr').selectAll('td.cell')
-	.data( (row,i) => colsorted.map( (col,j) => ({r: rowsorted[i],c: colsorted[j]}) ) )
+	.data( (row,i) => colsorted.map( (col,j) => ({r: rowsorted[i], c: colsorted[j]}) ) )
 	.join( enter => {
 
 		enter.append('td').classed('cell', true).html( d => gamers[d.r][d.c].cell );
@@ -233,7 +234,7 @@ function draw_table() {
 	d3.select("#maintable tbody").selectAll('tr').each( function(t) { 
 
 		d3.select(this).style("display", (
-			(filtstr.length > 0 && titleids[t][0].toLowerCase().indexOf(filtstr) < 0)
+			(filtstr.length > 0 && titleids[t].name.toLowerCase().indexOf(filtstr) < 0)
 			|| (show === "place" && t === "0")
 			) ? "none" : null);
 
@@ -241,38 +242,47 @@ function draw_table() {
 
 }
 
-
+///////////////////////////
+// parse answer from db api
 var strparser = [
-	0,
+	0,	// table 0 does no exist (still?)
 	s => {		// titleids
-		var row = s.split('\t');
-		row[0] = (row[0] === '\\N') ? "0" : row[0];
-		titleids[row[0]] = [ row[2], +row[1] ] ;
+		var row = s.split('\t');	// [ titleid, gamers, secs, name ]
+		var t = (row[0] === '\\N') ? "0" : row[0];
+		titleids[t] = { name: row[3], gamers: +row[1], secs: +row[2] } ;
 		allgames += +row[1];
 	},
 	s => {		// countries
-		var row = s.split('\t');
-		countries[row[1]] = [ row[2], row[3], +row[0] ];
-		allcountries += +row[3];
+		var row = s.split('\t');	// [ gamers, secs, countryid, country, countryname ]
+		var c = (row[2] === '\\N') ? "0" : row[2];
+		countries[c] = { country: row[3], countryname: row[4], gamers: +row[0], secs: +row[1] };
+		allcountries += +row[0];
 	},
 	s => {		// devices
-		var row = s.split('\t');
-		devices[row[2]] = { gamers: row[0], games: row[1], devname: row[3], devid: row[2] };
+		var row = s.split('\t');	// [ gamers, games, secs, devid, devname ]
+		var d = (row[3] === '\\N') ? "0" : row[3];
+		devices[d] = { gamers: +row[0], games: +row[1], secs: +row[2], devname: row[4] };
 		alldevices++;
 	},
 	s => {		// gamers [ titleid, countryid, gamers, secs ]
 		var row = s.split('\t');
-		row[1] = (row[1] === '\\N') ? "0" : row[1];		// countryid
-		row[0] = (row[0] === '\\N') ? "0" : row[0];		// titleid
-		gamers[row[0]] ??= {};
-		gamers[row[0]][row[1]] = { gamers: +row[2], avghours: (+row[2] > 0) ? +row[3]/3600./+row[2] : 0};
+		var t = (row[0] === '\\N') ? "0" : row[0];		// titleid
+		var c = (row[1] === '\\N') ? "0" : row[1];		// countryid
+		gamers[t] ??= {};
+		gamers[t][c] ??= {};
+		var g = +row[2];
+		gamers[t][c].gamers = { abs: g };
+		gamers[t][c].avgh = { abs: (g > 0) ? +row[3]/g/3600 : 0 };
 	},
 	s => {		// previous period
 		var row = s.split('\t');
-		row[1] = (row[1] === '\\N') ? "0" : row[1];
-		row[0] = (row[0] === '\\N') ? "0" : row[0];
-		prevper[row[0]] ??= {};
-		prevper[row[0]][row[1]] = { gamers: +row[2], avghours: (+row[2] > 0) ? +row[3]/3600./+row[2] : 0 };
+		var t = (row[0] === '\\N') ? "0" : row[0];		// titleid
+		var c = (row[1] === '\\N') ? "0" : row[1];		// countryid
+		prevper[t] ??= {};
+		prevper[t][c] ??= {};
+		var g = +row[2];
+		prevper[t][c].gamers = { abs: g };
+		prevper[t][c].avgh = { abs: (g > 0) ? +row[3]/g/3600 : 0 };
 	},
 ];
 
@@ -281,22 +291,22 @@ var strparser = [
 function draw_devices() {
 
 	d3.select("#devtable tbody").selectAll("tr")
-	.data(devices.filter( d => d))
+	.data(Object.keys(devices))
 	.join( enter => {
 		
 		var tr = enter.append('tr');
-		tr.attr('data-id', d => d.devid);
-		tr.append('td').append('input').property('type', 'checkbox').attr('data-id', d => d.devid).property('checked', d => devsel.has(d.devid));
-		tr.append('td').text(d => d.devname);
-		tr.append('td').text(d => d.gamers);
-		tr.append('td').text(d => d.games);
+		tr.attr('data-id', d => d);
+		tr.append('td').append('input').property('type', 'checkbox').attr('data-id', d => d).property('checked', d => devsel.has(d));
+		tr.append('td').text(d => devices[d].devname);
+		tr.append('td').text(d => devices[d].gamers);
+		tr.append('td').text(d => devices[d].games);
 		
 	}, update => {
 
 		update.select('td:nth-child(1)').property('type', 'checkbox').attr('data-id', d => d.devid).property('checked', d => devsel.has(d.devid));
-		update.select('td:nth-child(2)').text(d => d.devname);
-		update.select('td:nth-child(3)').text(d => d.gamers);
-		update.select('td:nth-child(4)').text(d => d.games);
+		update.select('td:nth-child(2)').text(d => devices[d].devname);
+		update.select('td:nth-child(3)').text(d => devices[d].gamers);
+		update.select('td:nth-child(4)').text(d => devices[d].games);
 	
 	}, exit => exit.remove()
 	);
@@ -372,8 +382,8 @@ function read_data() {
 	Promise.all(pr)
 	.then( () => {
 
-		countries["0"] = [ 'World', 'World', allcountries ];
-		titleids["0"] = [ 'All games', allgames ];
+		countries["0"] = { country: 'World', countryname: 'World' };
+		titleids["0"] = { name: 'All games' };
 
 		// calculating places and percentage
 		function pre_calc( g ) {
@@ -381,24 +391,30 @@ function read_data() {
 			// percentage
 			Object.keys(g).forEach( t => {
 				Object.keys(g[t]).forEach( c => {
+					[ "gamers", "avgh" ].forEach( d => {
 
-					if(t === "0")
-						g[t][c].perc = 1;
-					else
-						if(c === "0")
-							g[t][c].perc = g[t][c].gamers / g["0"]["0"].gamers;
+						if(t === "0")
+							g[t][c][d].perc = 1;
 						else
-							g[t][c].perc = g[t][c].gamers / g["0"][c].gamers;
+							if(c === "0")
+								g[t][c][d].perc = g[t][c][d].abs / g["0"]["0"][d].abs;
+							else
+								g[t][c][d].perc = g[t][c][d].abs / g["0"][c][d].abs;
+
+					});
 	
 				});
 	
 			});
 
 			// places
-			Object.keys(g["0"]).forEach( c => {		// cycle by country for "All games"
+			[ "gamers", "avgh" ].forEach( d => {
+				Object.keys(g["0"]).forEach( c => {		// cycle by country for "All games"
 
-				var place = 1;
-				Object.keys(g).toSorted( (a,b) => g[b][c].gamers - g[a][c].gamers ).map( t => (t === "0") ? 0 : g[t][c].place = place++);
+					var place = 1;
+					Object.keys(g).toSorted( (a,b) => g[b][c][d].abs - g[a][c][d].abs ).map( t => (t === "0") ? 0 : g[t][c][d].place = place++);
+
+				});
 
 			});
 
@@ -408,14 +424,14 @@ function read_data() {
 		Object.keys(gamers).forEach( t => {
 
 			if(gamers[t])
-				if(! gamers[t]["0"] || (gamers[t]["0"] && gamers[t]["0"].gamers === 0)) {
+				if(! gamers[t]["0"] || (gamers[t]["0"]["gamers"] && gamers[t]["0"]["gamers"].abs === 0)) {
 
-					delete gamers[t];
-					delete prevper[t];
+				delete gamers[t];
+				delete prevper[t];
 
-				}
+			}
 			if(prevper[t])
-				if(! prevper[t]["0"] || (prevper[t]["0"] && prevper[t]["0"].gamers === 0))
+				if(! prevper[t]["0"] || (prevper[t]["0"]["gamers"] && prevper[t]["0"]["gamers"].abs === 0))
 					delete prevper[t];
 
 		});
@@ -427,8 +443,12 @@ function read_data() {
 
 		});
 
+		console.log(1, gamers);
+
 		pre_calc(gamers);
 		pre_calc(prevper);
+		
+		console.log(2, gamers);
 
 		draw_table();
 		draw_devices();
