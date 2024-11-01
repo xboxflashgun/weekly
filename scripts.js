@@ -301,7 +301,7 @@ function draw_devices() {
 	console.log(devices);
 
 	d3.select("#devtable tbody").selectAll("tr")
-	.data(Object.keys(devices))
+	.data(Object.keys(devices).sort( (a,b) => devices[b].gamers - devices[a].gamers))
 	.join( enter => {
 		
 		var tr = enter.append('tr');
