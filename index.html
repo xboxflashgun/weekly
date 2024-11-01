@@ -13,13 +13,19 @@
 <body onload="main()">
 	<div id="params">
 		<span class="box">
-			Show: 
-			<label><input type="radio" name="valform" value="place">Place</label>
-			<label><input type="radio" name="valform" value="perc" checked>Percentage</label>
-			<label><input type="radio" name="valform" value="abs">Gamers</label>
+			week 31.12.2024-05.01.2025
 		</span>
 		<span class="box">
-			<label><input type="checkbox" name="showdiff" checked>Show difference with previous week</label>
+			Show: Hours/Gamers
+		</span>
+		<span class="box">
+			As: 
+			<label><input type="radio" name="valform" value="place">Place</label>
+			<label><input type="radio" name="valform" value="perc" checked>Percentage</label>
+			<label><input type="radio" name="valform" value="abs">Numbers</label>
+		</span>
+		<span class="box">
+			<label><input type="checkbox" name="showdiff" checked>Difference with previous week</label>
 		</span>
 		<span class="box">
 			Compact numbers: <select onchange="setcompact()" id="compactsel">

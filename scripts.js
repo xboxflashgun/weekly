@@ -15,7 +15,7 @@ var sortcolord = 1;
 var sortrow = "0";		// countryid
 var sortroword = 1;
 var show = "abs";	// cell format: "gamers"/"perc"/"place"
-var dim  = "gamers";	// table info: "gamers"/"avgh"
+var dim  = "avgh";	// table info: "gamers"/"avgh"
 var showdiff = true;	// show difference with previous period
 var devsel = new Set;
 
@@ -47,6 +47,8 @@ function draw_table() {
 	var filtstr = d3.select("#filter").property("value").toLowerCase();
 
 	var colsorted = Object.keys(gamers[sortcol]);
+
+	console.log(gamers);
 
 	const sort1 = function(a, b) { return sortcolord * (gamers[sortcol][b][dim][show] - gamers[sortcol][a][dim][show]); };
 
@@ -241,6 +243,12 @@ function draw_table() {
 			) ? "none" : null);
 
 	});
+
+	// mark row/column for world/allgames
+	d3.select("tr.allgames").classed("allgames", false);
+	d3.select('tr:has(td[data-id="0"])').classed('allgames', show !== "place");
+	d3.selectAll("td.allgames").classed("allgames", false);
+	d3.selectAll(`#maintable td:nth-child(${colsorted.indexOf("0") + 2})`).classed("allgames", true);
 
 }
 
