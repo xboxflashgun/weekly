@@ -37,6 +37,17 @@ function setcompact(e) {
 
 }
 
+////////////////////////
+// format cells function
+function compact(num) {
+
+	if(compactsel >= 0)
+		return new Intl.NumberFormat('en-US', { maximumFractionDigits: compactsel, notation: 'compact' }).format(num)
+	else
+		return num;
+
+}
+
 function draw_table() {
 
 	///////////////
@@ -47,8 +58,6 @@ function draw_table() {
 	var filtstr = d3.select("#filter").property("value").toLowerCase();
 
 	var colsorted = Object.keys(gamers[sortcol]);
-
-	console.log(gamers);
 
 	const sort1 = function(a, b) { return sortcolord * (gamers[sortcol][b][dim][show] - gamers[sortcol][a][dim][show]); };
 
@@ -69,17 +78,6 @@ function draw_table() {
 	// Remove information from "All games" cells if "place" option selected
 	if(show === "place")
 		colsorted.forEach( c => gamers["0"][c][show] = undefined );
-
-	////////////////////////
-	// format cells function
-	function compact(num) {
-
-		if(compactsel >= 0)
-			return new Intl.NumberFormat('en-US', { maximumFractionDigits: compactsel, notation: 'compact' }).format(num)
-		else
-			return num;
-
-	}
 
 	var allgamers = gamers["0"]["0"][dim].abs;
 	function compact_perc( num )  {
@@ -271,7 +269,7 @@ var strparser = [
 	s => {		// devices
 		var row = s.split('\t');	// [ gamers, games, secs, devid, devname ]
 		var d = (row[3] === '\\N') ? "0" : row[3];
-		devices[d] = { gamers: +row[0], games: +row[1], secs: +row[2], devname: row[4] };
+		devices[d] = { gamers: +row[0], games: +row[1], secs: +row[2], devname: row[4], avgh: compact(+row[2]/+row[0]/3600) };
 		alldevices++;
 	},
 	s => {		// gamers [ titleid, countryid, gamers, secs ]
@@ -300,6 +298,8 @@ var strparser = [
 // devices table
 function draw_devices() {
 
+	console.log(devices);
+
 	d3.select("#devtable tbody").selectAll("tr")
 	.data(Object.keys(devices))
 	.join( enter => {
@@ -310,6 +310,7 @@ function draw_devices() {
 		tr.append('td').text(d => devices[d].devname);
 		tr.append('td').text(d => devices[d].gamers);
 		tr.append('td').text(d => devices[d].games);
+		tr.append('td').text(d => devices[d].avgh);
 		
 	}, update => {
 
@@ -317,6 +318,7 @@ function draw_devices() {
 		update.select('td:nth-child(2)').text(d => devices[d].devname);
 		update.select('td:nth-child(3)').text(d => devices[d].gamers);
 		update.select('td:nth-child(4)').text(d => devices[d].games);
+		update.select('td:nth-child(5)').text(d => devices[d].avgh);
 	
 	}, exit => exit.remove()
 	);
