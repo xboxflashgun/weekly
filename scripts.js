@@ -52,11 +52,13 @@ function draw_table() {
 
 	colsorted.sort(sort1);
 
+
+
 	////////////
 	// sort rows
 	var rowsorted = Object.keys(gamers);
 
-	const sort2 = function(a, b) { return sortroword * (gamers[b][sortrow][show] - gamers[a][sortrow][show]); };
+	const sort2 = function(a, b) { return sortroword * (gamers[b][sortrow][dim][show] - gamers[a][sortrow][dim][show]); };
 
 	rowsorted.sort(sort2);
 	if(show === "place")
@@ -443,17 +445,11 @@ function read_data() {
 
 		});
 
-		console.log(1, gamers);
-
 		pre_calc(gamers);
 		pre_calc(prevper);
 		
-		console.log(2, gamers);
-
 		draw_table();
 		draw_devices();
-
-		console.log(gamers);
 
 	});
 
