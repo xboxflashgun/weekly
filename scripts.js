@@ -3,6 +3,7 @@ var countries = {};		// countries[] = { coutry: country, countryname: countrynam
 var gamers = {};		// gamers[] = { titleid: titleid, countryid: countryid, gamers: gamers }
 var prevper = {};		// same as gamers for previous period
 var devices = {};		// devices[devid] = { gamers, games, devname }
+var periods = {};		// periods[period] = { ts1: ts2: ts3 } 
 
 var grouped;
 
@@ -18,6 +19,7 @@ var show = "abs";	// cell format: "gamers"/"perc"/"place"
 var dim  = "avgh";	// table info: "gamers"/"avgh"
 var showdiff = true;	// show difference with previous period
 var devsel = new Set;
+var period = "day";
 
 var compactsel = 1;
 
@@ -255,26 +257,33 @@ function draw_table() {
 ///////////////////////////
 // parse answer from db api
 var strparser = [
-	0,	// table 0 does no exist (still?)
-	s => {		// titleids
+	s => {		// 0:
+		var row = s.split('\t');	// [ ts1, ts2, ts3, period ]
+		periods[row[3]] = {
+			ts1: new Date(row[0]),
+			ts2: new Date(row[1]),
+			ts3: new Date(row[2])
+		};
+	},
+	s => {		// 1: titleids
 		var row = s.split('\t');	// [ titleid, gamers, secs, name ]
 		var t = (row[0] === '\\N') ? "0" : row[0];
 		titleids[t] = { name: row[3], gamers: +row[1], secs: +row[2] } ;
 		allgames += +row[1];
 	},
-	s => {		// countries
+	s => {		// 2: countries
 		var row = s.split('\t');	// [ gamers, secs, countryid, country, countryname ]
 		var c = (row[2] === '\\N') ? "0" : row[2];
 		countries[c] = { country: row[3], countryname: row[4], gamers: +row[0], secs: +row[1] };
 		allcountries += +row[0];
 	},
-	s => {		// devices
+	s => {		// 3: devices
 		var row = s.split('\t');	// [ gamers, games, secs, devid, devname ]
 		var d = (row[3] === '\\N') ? "0" : row[3];
 		devices[d] = { gamers: +row[0], games: +row[1], secs: +row[2], devname: row[4], avgh: +row[2]/+row[0]/3600 };
 		alldevices++;
 	},
-	s => {		// gamers [ titleid, countryid, gamers, secs ]
+	s => {		// 4: gamers [ titleid, countryid, gamers, secs ]
 		var row = s.split('\t');
 		var t = (row[0] === '\\N') ? "0" : row[0];		// titleid
 		var c = (row[1] === '\\N') ? "0" : row[1];		// countryid
@@ -284,7 +293,7 @@ var strparser = [
 		gamers[t][c].gamers = { abs: g };
 		gamers[t][c].avgh = { abs: (g > 0) ? +row[3]/g/3600 : 0 };
 	},
-	s => {		// previous period
+	s => {		// 5: previous period
 		var row = s.split('\t');
 		var t = (row[0] === '\\N') ? "0" : row[0];		// titleid
 		var c = (row[1] === '\\N') ? "0" : row[1];		// countryid
@@ -348,11 +357,37 @@ function draw_devices() {
 	});
 
 	d3.select("#devselect").text( devsel.size ? `${devsel.size} / ${alldevices}` : "All" )
-	.on('click', e =>  d3.select("#devpopup").style("display", null));
+		.on('click', e => d3.select("#devpopup").style("display", null)); 
 	d3.select("#devpopup .winclose").on('click', e => d3.select("#devpopup").style("display", "none"));
 
 }
 
+//////////////
+// draw period
+function draw_period() {
+
+	var pername;
+	var d = periods[period];
+	
+	if(period === "day")
+		pername = d.ts3.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+	if(period === "week")
+		if(d.ts2.getMonth() === d.ts3.getMonth())
+			pername = d.ts2.getDate() + ' - ' + (d.ts2.getDate() + 6) + ' ' + d.ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
+		else if(d.ts2.getFullYear === d.ts3.getFullYear)
+			pername = d.ts2.getDate() + ' ' + d.ts2.toLocaleDateString(undefined, { month: "short"})
+				+ ' - ' + (d.ts2.getDate() + 6) + ' ' + d.ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
+		else
+			pername = d.ts2.getDate() + ' ' + d.ts2.toLocaleDateString(undefined, { month: "short", year: "numeric" })
+				+ ' - ' + (d.ts2.getDate() + 6) + ' ' + d.ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
+	if(period === 'month')
+		pername = d.ts2.toLocaleDateString(undefined, { month: "short", year: "numeric" });
+	if(period === 'year')
+		pername = d.ts2.toLocaleDateString(undefined, { year: "numeric" });
+
+	d3.select("#period").text(period.charAt(0).toUpperCase() + period.slice(1) + ': ' + pername);
+
+}
 
 function read_data() {
 
@@ -373,8 +408,8 @@ function read_data() {
 
 	var devids = (devsel.size > 0) ? `&devids=${Array.from(devsel).join(',')}` : '';
 
-	for( let i = 1; i != 6; i++ )
-		pr.push(fetch(`api/gettsv.php?tab=day&num=${i}${devids}`)
+	for( let i = 0; i != 6; i++ )
+		pr.push(fetch(`api/gettsv.php?tab=${period}&num=${i}${devids}`)
 			.then(res => res.text())
 			.then(res => {
 
@@ -394,6 +429,7 @@ function read_data() {
 	Promise.all(pr)
 	.then( () => {
 
+		draw_period();		// DEBUG
 		countries["0"] = { country: 'World', countryname: 'World' };
 		titleids["0"] = { name: 'All games' };
 
@@ -460,6 +496,7 @@ function read_data() {
 		
 		draw_table();
 		draw_devices();
+		draw_period();
 
 	});
 
