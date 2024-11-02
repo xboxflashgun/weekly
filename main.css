@@ -118,6 +118,7 @@ th.countries {
 #devselect {
 	cursor: pointer;
 	color: #ddd;
+	font-weight: bold;
 }
 
 .popupbox {
@@ -160,5 +161,17 @@ h1 {
 	padding: 0px 6px;
 	font-weight: bold;
 	margin-top: 8px;
+	cursor: pointer;
+}
+
+.qmark {
+	background: #777;
+	color: #fff;
+	border-radius: 50%;
+	text-align: center;
+	font-family: Verdana;
+	padding: 0px 5px;
+	font-size: 10px;
+	font-weight: bold;
 	cursor: pointer;
 }
