@@ -13,10 +13,12 @@
 <body onload="main()">
 	<div id="params">
 		<span class="box">
-			week 31.12.2024-05.01.2025 <span class="qmark">?</span>
+			Week 31.12.2024-05.01.2025 <span class="qmark">?</span>
 		</span>
 		<span class="box">
-			Show: Hours/Gamers
+			Show: 
+			<label><input type="radio" name="dim" value="avgh">Hours</label>
+			<label><input type="radio" name="dim" value="gamers" checked>Gamers</label>
 		</span>
 		<span class="box">
 			As: 
@@ -31,8 +33,8 @@
 			Compact numbers: <select onchange="setcompact()" id="compactsel">
 				<option value="-1">no</option>
 				<option value="0">0</option>
-				<option value="1" selected>1</option>
-				<option value="2">2</option>
+				<option value="1" selected>0.1</option>
+				<option value="2">0.01</option>
 			</select>
 		</span>
 		<span class="box">

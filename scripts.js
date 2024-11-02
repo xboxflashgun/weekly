@@ -55,6 +55,7 @@ function draw_table() {
 	// sort columns
 	show = d3.select('input[name="valform"]:checked').property("value");
 	showdiff = d3.select('input[name="showdiff"]').property("checked");
+	dim = d3.select('input[name="dim"]:checked').property("value");
 
 	var filtstr = d3.select("#filter").property("value").toLowerCase();
 
