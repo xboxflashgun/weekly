@@ -34,6 +34,7 @@ function setcompact(e) {
 
 	compactsel = +d3.select("#compactsel option:checked").property("value");
 	draw_table();
+	draw_devices();
 
 }
 
@@ -269,7 +270,7 @@ var strparser = [
 	s => {		// devices
 		var row = s.split('\t');	// [ gamers, games, secs, devid, devname ]
 		var d = (row[3] === '\\N') ? "0" : row[3];
-		devices[d] = { gamers: +row[0], games: +row[1], secs: +row[2], devname: row[4], avgh: compact(+row[2]/+row[0]/3600) };
+		devices[d] = { gamers: +row[0], games: +row[1], secs: +row[2], devname: row[4], avgh: +row[2]/+row[0]/3600 };
 		alldevices++;
 	},
 	s => {		// gamers [ titleid, countryid, gamers, secs ]
@@ -298,8 +299,6 @@ var strparser = [
 // devices table
 function draw_devices() {
 
-	console.log(devices);
-
 	d3.select("#devtable tbody").selectAll("tr")
 	.data(Object.keys(devices).sort( (a,b) => devices[b].gamers - devices[a].gamers))
 	.join( enter => {
@@ -310,7 +309,7 @@ function draw_devices() {
 		tr.append('td').text(d => devices[d].devname);
 		tr.append('td').text(d => devices[d].gamers);
 		tr.append('td').text(d => devices[d].games);
-		tr.append('td').text(d => devices[d].avgh);
+		tr.append('td').text(d => compact(devices[d].avgh));
 		
 	}, update => {
 
@@ -318,7 +317,7 @@ function draw_devices() {
 		update.select('td:nth-child(2)').text(d => devices[d].devname);
 		update.select('td:nth-child(3)').text(d => devices[d].gamers);
 		update.select('td:nth-child(4)').text(d => devices[d].games);
-		update.select('td:nth-child(5)').text(d => devices[d].avgh);
+		update.select('td:nth-child(5)').text(d => compact(devices[d].avgh));
 	
 	}, exit => exit.remove()
 	);
