@@ -258,11 +258,12 @@ function draw_table() {
 // parse answer from db api
 var strparser = [
 	s => {		// 0:
-		var row = s.split('\t');	// [ ts1, ts2, ts3, period ]
+		var row = s.split('\t');	// [ ts1, ts2, ts3, period, accuracy ]
 		periods[row[3]] = {
 			ts1: new Date(row[0]),
 			ts2: new Date(row[1]),
-			ts3: new Date(row[2])
+			ts3: new Date(row[2]),
+			accuracy: (+row[4] * 100).toFixed(2) + '%'
 		};
 	},
 	s => {		// 1: titleids
@@ -437,7 +438,6 @@ function read_data() {
 	Promise.all(pr)
 	.then( () => {
 
-		draw_period();		// DEBUG
 		countries["0"] = { country: 'World', countryname: 'World' };
 		titleids["0"] = { name: 'All games' };
 
@@ -505,6 +505,7 @@ function read_data() {
 		draw_table();
 		draw_devices();
 		draw_period();
+		d3.select("#accuracy").text(periods[period].accuracy);	// data capture downtime
 
 	});
 
