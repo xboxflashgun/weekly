@@ -121,7 +121,7 @@ th.countries {
 	font-weight: bold;
 }
 
-.popupbox {
+.devpopupbox {
 	position: absolute;
 	border: 1px solid #ddd;
 	border-radius: 5px;

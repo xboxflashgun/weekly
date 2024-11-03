@@ -9,6 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="main.css">
 	<script src="/d3.v7.min.js"></script>
 	<script src="scripts.js"></script>
+	<script src="cellinfo.js"></script>
 </head>
 <body onload="main()">
 	<div id="params">
@@ -61,12 +62,17 @@
 		</table>
 	</div>
 
-	<div id="devpopup" class="popupbox">
+	<div id="devpopup" class="devpopupbox">
 		<div class="winclose">&#x2715;</div>
 		<h1>Device select</h1>
 		<table id="devtable"><thead><th>#</th><th>Device</th><th>Gamers</th><th>Games</th><th>Avg. Hours</th></thead>
 			<tbody></tbody>
 		</table>
+	</div>
+
+	<div id="cellinfo" class="cellpopupbox">
+		<div class="winclose">&#x2715;</div>
+		<h1>titleId</h1>
 	</div>
 
 </body>

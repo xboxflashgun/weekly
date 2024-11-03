@@ -252,6 +252,9 @@ function draw_table() {
 	d3.selectAll("td.allgames").classed("allgames", false);
 	d3.selectAll(`#maintable td:nth-child(${colsorted.indexOf("0") + 2})`).classed("allgames", true);
 
+	// cell info (cellinfo.js)
+	d3.select("#maintable tbody").on('click', cellinfo);
+
 }
 
 ///////////////////////////
@@ -506,6 +509,7 @@ function read_data() {
 		draw_devices();
 		draw_period();
 		d3.select("#accuracy").text(periods[period].accuracy);	// data capture downtime
+		console.log(devices);
 
 	});
 
