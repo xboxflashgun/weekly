@@ -175,3 +175,15 @@ h1 {
 	font-weight: bold;
 	cursor: pointer;
 }
+
+.cellpopupbox {
+	position: absolute;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 0px 10px 10px;
+	cursor: default;
+	background-color: #226;
+	width: auto;
+	top: 100px;
+	left: 600px;
+}

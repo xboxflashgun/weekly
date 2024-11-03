@@ -20,6 +20,7 @@ var dim  = "avgh";	// table info: "gamers"/"avgh"
 var showdiff = true;	// show difference with previous period
 var devsel = new Set;
 var period = "day";
+var colsorted = [];
 
 var compactsel = 1;
 
@@ -27,6 +28,8 @@ function main() {
 
 	// hide device popup
 	d3.select("#devpopup").style("display", "none");
+
+	devsel.add("13");
 
 	read_data();
 
@@ -61,7 +64,7 @@ function draw_table() {
 
 	var filtstr = d3.select("#filter").property("value").toLowerCase();
 
-	var colsorted = Object.keys(gamers[sortcol]);
+	colsorted = Object.keys(gamers[sortcol]);
 
 	const sort1 = function(a, b) { return sortcolord * (gamers[sortcol][b][dim][show] - gamers[sortcol][a][dim][show]); };
 
