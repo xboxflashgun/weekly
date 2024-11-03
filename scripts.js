@@ -364,28 +364,36 @@ function draw_devices() {
 
 //////////////
 // draw period
-function draw_period() {
+
+function period_totext(ts3, ts2) {
 
 	var pername;
+
+	if(period === "day")
+		pername = ts3.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+	if(period === "week")
+		if(ts2.getMonth() === ts3.getMonth())
+			pername = ts2.getDate() + ' - ' + (ts2.getDate() + 6) + ' ' + ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
+		else if(ts2.getFullYear === ts3.getFullYear)
+			pername = ts2.getDate() + ' ' + ts2.toLocaleDateString(undefined, { month: "short"})
+				+ ' - ' + (ts2.getDate() + 6) + ' ' + ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
+		else
+			pername = ts2.getDate() + ' ' + ts2.toLocaleDateString(undefined, { month: "short", year: "numeric" })
+				+ ' - ' + (ts2.getDate() + 6) + ' ' + ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
+	if(period === 'month')
+		pername = ts2.toLocaleDateString(undefined, { month: "short", year: "numeric" });
+	if(period === 'year')
+		pername = ts2.toLocaleDateString(undefined, { year: "numeric" });
+
+	return pername;
+
+}
+
+function draw_period() {
+
 	var d = periods[period];
 	
-	if(period === "day")
-		pername = d.ts3.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
-	if(period === "week")
-		if(d.ts2.getMonth() === d.ts3.getMonth())
-			pername = d.ts2.getDate() + ' - ' + (d.ts2.getDate() + 6) + ' ' + d.ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
-		else if(d.ts2.getFullYear === d.ts3.getFullYear)
-			pername = d.ts2.getDate() + ' ' + d.ts2.toLocaleDateString(undefined, { month: "short"})
-				+ ' - ' + (d.ts2.getDate() + 6) + ' ' + d.ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
-		else
-			pername = d.ts2.getDate() + ' ' + d.ts2.toLocaleDateString(undefined, { month: "short", year: "numeric" })
-				+ ' - ' + (d.ts2.getDate() + 6) + ' ' + d.ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
-	if(period === 'month')
-		pername = d.ts2.toLocaleDateString(undefined, { month: "short", year: "numeric" });
-	if(period === 'year')
-		pername = d.ts2.toLocaleDateString(undefined, { year: "numeric" });
-
-	d3.select("#period").text(period.charAt(0).toUpperCase() + period.slice(1) + ': ' + pername);
+	d3.select("#period").text(period.charAt(0).toUpperCase() + period.slice(1) + ': ' + period_totext(d.ts3, d.ts2));
 
 }
 
