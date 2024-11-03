@@ -54,10 +54,13 @@ create MATERIALIZED VIEW mv_%period%3 as
 	from presence 
 	join devices using(devid) 
 	join mv_%period%1 using(titleid)
+	join gamers using(xuid)
+	join mv_%period%2 using(countryid)
 	WHERE 
 		presence.utime >= (EXTRACT(epoch FROM date_trunc('%period%', now()-interval '1 %period%'))::integer) 
 		AND presence.utime < (EXTRACT(epoch FROM date_trunc('%period%', now()))::integer) 
 		and devid is not null 
+		and countryid is not null
 	group by devid,devname;
 
 -- this %period%
@@ -82,6 +85,7 @@ SELECT
             presence.utime >= (EXTRACT(epoch FROM date_trunc('%period%', now()-interval '1 %period%')))::integer
             AND presence.utime < (EXTRACT(epoch FROM date_trunc('%period%', now())))::integer
             and devid is not null
+			and countryid is not null
           GROUP BY CUBE(gamers.countryid, presence.titleid, devid)
         UNION
          SELECT mv_%period%2.countryid,
@@ -117,6 +121,7 @@ SELECT
             presence.utime >= (EXTRACT(epoch FROM date_trunc('%period%', now()-interval '2 %period%s')))::integer
             AND presence.utime < (EXTRACT(epoch FROM date_trunc('%period%', now()-interval '1 %period%')))::integer
             and devid is not null
+			and countryid is not null
           GROUP BY CUBE(gamers.countryid, presence.titleid, devid)
         UNION
          SELECT mv_%period%2.countryid,
