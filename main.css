@@ -162,6 +162,7 @@ h1 {
 	font-weight: bold;
 	margin-top: 8px;
 	cursor: pointer;
+	margin-left: 25px;
 }
 
 .qmark {
@@ -186,4 +187,21 @@ h1 {
 	width: auto;
 	top: 100px;
 	left: 600px;
+}
+
+#cellinfo h1 {
+	float: left;
+}
+
+#cellinfo img {
+	float: left;
+	padding-right: 25px;
+}
+
+#genres span {
+	padding: 0px 6px;
+	background-color: #252;
+	border: 1px solid #252;
+	margin: 0px 6px;
+	border-radius: 5px;
 }
