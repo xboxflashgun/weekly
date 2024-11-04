@@ -29,7 +29,7 @@ function main() {
 	// hide device popup
 	d3.select("#devpopup").style("display", "none");
 
-	devsel.add("13");
+	// devsel.add("13");
 
 	read_data();
 
@@ -379,11 +379,11 @@ function period_totext(ts3, ts2) {
 	if(period === "day")
 		pername = ts3.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
 	if(period === "week")
-		if(ts2.getMonth() === ts3.getMonth())
+		if(ts2.getMonth() === ts3.getMonth() || (ts2.getMonth() !== ts3.getMonth() && ts3.getDate() === 1))
 			pername = ts2.getDate() + ' - ' + (ts2.getDate() + 6) + ' ' + ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
 		else if(ts2.getFullYear === ts3.getFullYear)
 			pername = ts2.getDate() + ' ' + ts2.toLocaleDateString(undefined, { month: "short"})
-				+ ' - ' + (ts2.getDate() + 6) + ' ' + ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
+				+ ' - ' + (ts3.getDate() - 1) + ' ' + ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
 		else
 			pername = ts2.getDate() + ' ' + ts2.toLocaleDateString(undefined, { month: "short", year: "numeric" })
 				+ ' - ' + (ts2.getDate() + 6) + ' ' + ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });

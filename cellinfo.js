@@ -13,6 +13,9 @@ function cellinfo(e) {
 	popup.select("h1").text(titleids[id].name);
 	popup.select("h2").text(countries[colsorted[col-1]].countryname);
 
+	popup.style("top", +e.layerY + 10 + "px");
+	popup.style("left", +e.layerX - 5 + "px");
+
 	popup.select('img').attr('src', "/1x1.png");
 
 	var link;
