@@ -19,7 +19,7 @@ var show = "abs";	// cell format: "gamers"/"perc"/"place"
 var dim  = "avgh";	// table info: "gamers"/"avgh"
 var showdiff = true;	// show difference with previous period
 var devsel = new Set;
-var period = "day";
+var period = "week";
 var colsorted = [];
 
 var compactsel = 1;
