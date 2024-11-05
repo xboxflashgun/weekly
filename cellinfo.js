@@ -60,8 +60,6 @@ function cellinfo(e) {
 
 		popup.select('img').attr('src', img);
 
-		console.log(id, link, genres, imgs);
-
 		if(genres) 
 			d3.select("#genres").selectAll("span")
 			.data(genres)
@@ -73,6 +71,40 @@ function cellinfo(e) {
 			);
 		else
 			d3.selectAll("#genres span").remove();
+
+		var [ cell1, cell2 ] = [ gamers[id][colsorted[col-1]], prevper[id][colsorted[col-1]] ];
+		console.log(cell1, cell2);
+
+		//////////////////////
+		// fill table cellinfo
+		// sel = "t"/"p" (this/previous)
+		function fill_tab(cell, sel) {
+
+			Object.keys(cell).forEach( p => {
+			
+				if(p === "cell")
+					return;
+				Object.keys(cell[p]).forEach( k => {
+
+					console.log(p, k, cell[p][k]);
+
+					var t = compact(cell[p][k] * ((k === "perc")? 100 : 1)) + ((k === "perc") ? "%" : "");
+					popup.select(`#${sel+p+k}`).text(t);
+
+					// world
+					t = compact( ((sel === "t") ? gamers["0"][colsorted[col-1]][p][k] : prevper["0"][colsorted[col-1]][p][k]) * ((k === "perc")? 100 : 1));
+					t = t + ((k === "perc") ? "%" : "");
+					popup.select(`#${sel+p+k}0`).text(t);
+
+				});
+
+			});
+
+		}
+
+		popup.selectAll(".cellinfocountry").text(countries[colsorted[col-1]].country);
+		fill_tab(cell1, "t");
+		fill_tab(cell2, "p");
 
 	});
 

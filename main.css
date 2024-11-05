@@ -205,3 +205,19 @@ h1 {
 	margin: 0px 6px;
 	border-radius: 5px;
 }
+
+#cellinfo table {
+	border: 1px solid #bbb;
+	border-collapse: collapse;
+	margin-top: 10px;
+}
+
+#cellinfo th,
+#cellinfo td {
+	border: 1px solid #bbb;
+	padding: 0px 6px;
+}
+
+#cellinfo td {
+	text-align: right;
+}
