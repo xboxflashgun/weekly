@@ -73,7 +73,6 @@ function cellinfo(e) {
 			d3.selectAll("#genres span").remove();
 
 		var [ cell1, cell2 ] = [ gamers[id][colsorted[col-1]], prevper[id][colsorted[col-1]] ];
-		console.log(cell1, cell2);
 
 		//////////////////////
 		// fill table cellinfo
@@ -85,8 +84,6 @@ function cellinfo(e) {
 				if(p === "cell")
 					return;
 				Object.keys(cell[p]).forEach( k => {
-
-					console.log(p, k, cell[p][k]);
 
 					var t = compact(cell[p][k] * ((k === "perc")? 100 : 1)) + ((k === "perc") ? "%" : "");
 					popup.select(`#${sel+p+k}`).text(t);

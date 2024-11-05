@@ -514,7 +514,6 @@ function read_data() {
 		draw_devices();
 		draw_period();
 		d3.select("#accuracy").text(periods[period].accuracy);	// data capture downtime
-		console.log(devices);
 
 	});
 
