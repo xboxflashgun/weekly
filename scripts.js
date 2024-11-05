@@ -28,6 +28,7 @@ function main() {
 
 	// hide device popup
 	d3.select("#devpopup").style("display", "none");
+	d3.select("#cellinfo").style("display", "none");
 
 	// devsel.add("13");
 
@@ -135,12 +136,12 @@ function draw_table() {
 	.join( enter => {
 	
 		var th = enter.append('th').classed('countries', true);
-		th.attr("data-id", d => d);
+		th.attr("data-id", d => d).attr("title", d => countries[d].countryname);
 		th.text(d => countries[d].country);
 	
 	}, update => {
 
-		update.attr("data-id", d => d);
+		update.attr("data-id", d => d).attr("title", d => countries[d].countryname);
 		update.text(d => countries[d].country);
 
 	}, exit => {

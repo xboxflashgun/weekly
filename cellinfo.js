@@ -17,6 +17,7 @@ function cellinfo(e) {
 	popup.style("left", +e.layerX - 5 + "px");
 
 	popup.select('img').attr('src', "/1x1.png");
+	popup.style("display", null);
 
 	var link;
 	var imgs;
@@ -74,5 +75,7 @@ function cellinfo(e) {
 			d3.selectAll("#genres span").remove();
 
 	});
+
+	popup.select(".winclose").on('click', e => popup.style("display", "none"));
 
 }
