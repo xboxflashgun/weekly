@@ -401,8 +401,9 @@ function draw_period() {
 
 	var d = periods[period];
 	
-	d3.selectAll(".period").text(period.charAt(0).toUpperCase() + period.slice(1) + ': ' + period_totext(d.ts3, d.ts2));
-	d3.select("#prevperiod").text(period.charAt(0).toUpperCase() + period.slice(1) + ': ' + period_totext(d.ts2, d.ts1));
+	d3.selectAll(".periodterm").text(period.charAt(0).toUpperCase() + period.slice(1));		// Week/Month/Day
+	d3.selectAll(".period").text(period_totext(d.ts3, d.ts2));
+	d3.selectAll(".prevperiod").text(period_totext(d.ts2, d.ts1));
 
 }
 
