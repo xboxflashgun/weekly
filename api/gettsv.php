@@ -16,15 +16,15 @@ $rep = "";
 $tab = $_GET["tab"];
 $num = $_GET["num"];
 
+$dev = "true";
+if(isset($_GET["devids"]))
+	$dev = "devid=any(array[" . $_GET["devids"] . "])";
+
 $req = "";
 
 if($num ==  4 || $num == 5) {
 	
-	$dev = "";
-	if(isset($_GET["devids"]))
-		$dev = "where devid=any(array[" . $_GET["devids"] . "])";
-
-	$req = "select titleid,countryid,sum(gamers),sum(secs) from mv_$tab$num $dev group by 1,2 order by 1,2";
+	$req = "select titleid,countryid,sum(gamers),sum(secs) from mv_$tab$num where $dev group by 1,2 order by 1,2";
 
 } else if($num == 6)
 
@@ -35,7 +35,8 @@ with tab as materialized (
 		string_agg(devid::text,',') as devs 
 	from mv_${tab}4 
 	where 
-		devid is not null 
+		$dev
+		and devid is not null 
 		and gamers > 0 
 		and countryid is null 
 	group by 1
@@ -59,8 +60,9 @@ from mv_${tab}4
 join gamegenres using(titleid)
 join genres using(genreid)
 where
-	countryid is null
-	and devid is null
+	$dev
+	and countryid is null
+	and devid is not null
 group by 1,2
 
 ";
