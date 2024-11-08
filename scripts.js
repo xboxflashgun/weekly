@@ -5,7 +5,7 @@ var prevper = {};		// same as gamers for previous period
 var devices = {};		// devices[devid] = { gamers, games, devname }
 var periods = {};		// periods[period] = { ts1: ts2: ts3 } 
 var devgenres = {};		// devgenres[titleid] = { devids: [1,2,3], genreids: [6,7,8] };
-var genres = {};		// genrelist[genreid] = { genre, gamers, games };
+var genres = {};		// genrelist[genreid] = { genre, gamers, games, avgh };
 
 var grouped;
 
@@ -32,7 +32,7 @@ function main() {
 	d3.select("#devpopup").style("display", "none");
 	d3.select("#cellinfo").style("display", "none");
 
-	// devsel.add("13");
+	devsel.add("7");		// Xbox360
 
 	read_data();
 
@@ -323,9 +323,9 @@ var strparser = [
 		var g = (row[2] === '\\N') ? "0" : row[2];		// genres
 		devgenres[t] = { devids: row[1].split(','), genreids: g.split(',') };
 	},
-	s => {		// 7: genreid, genre
+	s => {		// 7: genreid, genre, gamers, games, avgh
 		var row = s.split('\t');
-		genres[row[0]] = { genre: row[1], gamers: +row[2], games: +row[3] };
+		genres[row[0]] = { genre: row[1], gamers: +row[2], games: +row[3], avgh: +row[2]/+row[3]/3600 };
 	},
 ];
 
@@ -530,8 +530,10 @@ function read_data() {
 		pre_calc(prevper);
 		
 		devgenres["0"].genreids = Object.keys(genres);
-		genres["0"] = { genre: '', gamers: allgames, games: Object.keys(titleids).length - 1 };
+		genres["0"] = { genre: '', gamers: gamers["0"]["0"].gamers.abs, games: Object.keys(gamers).length - 1 };
+		genres["0"].avgh = genres["0"].gamers/genres["0"].games/3600;
 
+		console.log(gamers);
 		console.log(devgenres);
 		console.log(genres);
 
