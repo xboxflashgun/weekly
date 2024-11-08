@@ -52,10 +52,15 @@ else if($num == 7)
 	$req = "
 select
 	distinct genreid,
-	genre
+	genre,
+	sum(gamers) as gamers,
+	count(*) as games
 from mv_${tab}4
 join gamegenres using(titleid)
 join genres using(genreid)
+where
+	countryid is null
+	and devid is null
 group by 1,2
 
 ";

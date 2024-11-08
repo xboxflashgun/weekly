@@ -5,7 +5,7 @@ var prevper = {};		// same as gamers for previous period
 var devices = {};		// devices[devid] = { gamers, games, devname }
 var periods = {};		// periods[period] = { ts1: ts2: ts3 } 
 var devgenres = {};		// devgenres[titleid] = { devids: [1,2,3], genreids: [6,7,8] };
-var genres = {};		// genrelist[genreid] = "genre"
+var genres = {};		// genrelist[genreid] = { genre, gamers, games };
 
 var grouped;
 
@@ -166,14 +166,14 @@ function draw_table() {
 		var td = tr.append('td').attr('data-id', d => d);
 		td.text(d => titleids[d].name);
 		td.attr('title', d => 'Platform(s): ' + devgenres[d].devids.map( e => devices[e].devname ).join(', ') 
-			+ '\nGenres: ' + devgenres[d].genreids.map( g => genres[g]).join(', '));
+			+ '\nGenres: ' + devgenres[d].genreids.map( g => genres[g].genre ).join(', '));
 
 	}, update => {
 
 		var td = update.select("td");
 		td.attr('data-id', d => d).text(d => titleids[d].name);
 		td.attr('title', d => 'Platform(s): ' + devgenres[d].devids.map( e => devices[e].devname ).join(', ') 
-			+ '\nGenres: ' + devgenres[d].genreids.map( g => genres[g]).join(', '));
+			+ '\nGenres: ' + devgenres[d].genreids.map( g => genres[g].genre).join(', '));
 
 	}, exit => {
 
@@ -320,11 +320,12 @@ var strparser = [
 	s => {		// 6: titleid, devs, genres
 		var row = s.split('\t');
 		var t = (row[0] === '\\N') ? "0" : row[0];      // titleid
-		devgenres[t] = { devids: row[1].split(','), genreids: row[2].split(',') };
+		var g = (row[2] === '\\N') ? "0" : row[2];		// genres
+		devgenres[t] = { devids: row[1].split(','), genreids: g.split(',') };
 	},
 	s => {		// 7: genreid, genre
 		var row = s.split('\t');
-		genres[row[0]] = row[1];
+		genres[row[0]] = { genre: row[1], gamers: +row[2], games: +row[3] };
 	},
 ];
 
@@ -528,14 +529,17 @@ function read_data() {
 		pre_calc(gamers);
 		pre_calc(prevper);
 		
+		devgenres["0"].genreids = Object.keys(genres);
+		genres["0"] = { genre: '', gamers: allgames, games: Object.keys(titleids).length - 1 };
+
+		console.log(devgenres);
+		console.log(genres);
+
 		draw_table();
 		draw_devices();
 		draw_period();
 		d3.select("#accuracy").text(periods[period].accuracy);	// data capture downtime
 		
-		console.log(devgenres);
-		console.log(genres);
-
 	});
 
 }
