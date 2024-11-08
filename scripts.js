@@ -172,6 +172,8 @@ function draw_table() {
 
 		var td = update.select("td");
 		td.attr('data-id', d => d).text(d => titleids[d].name);
+		td.attr('title', d => 'Platform(s): ' + devgenres[d].devids.map( e => devices[e].devname ).join(', ') 
+			+ '\nGenres: ' + devgenres[d].genreids.map( g => genres[g]).join(', '));
 
 	}, exit => {
 
