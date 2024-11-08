@@ -237,3 +237,8 @@ h1 {
 #celldivcountry {
 	padding-top: 56px;
 }
+
+#genres span {
+	white-space: nowrap;
+	display: inline-block;
+}
