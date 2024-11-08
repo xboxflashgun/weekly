@@ -4,6 +4,8 @@ var gamers = {};		// gamers[] = { titleid: titleid, countryid: countryid, gamers
 var prevper = {};		// same as gamers for previous period
 var devices = {};		// devices[devid] = { gamers, games, devname }
 var periods = {};		// periods[period] = { ts1: ts2: ts3 } 
+var devgenres = {};		// devgenres[titleid] = { devids: [1,2,3], genreids: [6,7,8] };
+var genres = {};		// genrelist[genreid] = "genre"
 
 var grouped;
 
@@ -311,6 +313,15 @@ var strparser = [
 		prevper[t][c].gamers = { abs: g };
 		prevper[t][c].avgh = { abs: (g > 0) ? +row[3]/g/3600 : 0 };
 	},
+	s => {		// 6: titleid, devs, genres
+		var row = s.split('\t');
+		var t = (row[0] === '\\N') ? "0" : row[0];      // titleid
+		devgenres[t] = { devids: row[1].split(','), genreids: row[2].split(',') };
+	},
+	s => {		// 7: genreid, genre
+		var row = s.split('\t');
+		genres[row[0]] = row[1];
+	},
 ];
 
 ////////////////
@@ -415,6 +426,8 @@ function read_data() {
 	prevper = {};
 	titleids = {};
 	countries = {};
+	devgenres = {};
+	genres = {};
 	
 	allcountries = 0;
 	allgames = 0;
@@ -426,7 +439,7 @@ function read_data() {
 
 	var devids = (devsel.size > 0) ? `&devids=${Array.from(devsel).join(',')}` : '';
 
-	for( let i = 0; i != 6; i++ )
+	for( let i = 0; i <= 7; i++ )
 		pr.push(fetch(`api/gettsv.php?tab=${period}&num=${i}${devids}`)
 			.then(res => res.text())
 			.then(res => {
@@ -515,6 +528,9 @@ function read_data() {
 		draw_devices();
 		draw_period();
 		d3.select("#accuracy").text(periods[period].accuracy);	// data capture downtime
+		
+		console.log(devgenres);
+		console.log(genres);
 
 	});
 
