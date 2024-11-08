@@ -11,7 +11,7 @@ function cellinfo(e) {
 
 	var popup = d3.select("#cellinfo");
 	popup.select("h1").text(titleids[id].name);
-	popup.select("h2").text(countries[colsorted[col-1]].countryname);
+	popup.select("h2").text('Country: ' + countries[colsorted[col-1]].countryname);
 
 	popup.style("top", +e.layerY + 10 + "px");
 	popup.style("left", +e.layerX - 5 + "px");
@@ -71,6 +71,15 @@ function cellinfo(e) {
 			);
 		else
 			d3.selectAll("#genres span").remove();
+
+		d3.select("#cellplats").selectAll("span")
+		.data(devgenres[id].devids)
+		.join(enter => {
+			enter.append('span').text(p => devices[p].devname);
+		}, update => {
+			update.text(p => devices[p].devname);
+		}, exit => exit.remove()
+		);
 
 		var [ cell1, cell2 ] = [ gamers[id][colsorted[col-1]], prevper[id][colsorted[col-1]] ];
 

@@ -204,7 +204,8 @@ h1 {
 	padding-right: 25px;
 }
 
-#genres span {
+#genres span,
+#cellplats span {
 	padding: 0px 6px;
 	background-color: #181;
 	border: 1px solid #181;
@@ -242,3 +243,15 @@ h1 {
 	white-space: nowrap;
 	display: inline-block;
 }
+
+#cellplatsdiv {
+	padding-top: 8px;
+	font-weight: bold;
+	color: #ddd;
+}
+
+#cellgenres {
+	font-weight: bold;
+	color: #ddd;
+}
+
