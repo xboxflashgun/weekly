@@ -1,7 +1,17 @@
+var genresortcol = 1;
+var genresortord = 1;
+
 function draw_genre() {
 
+	var sortfunc = [
+		(a,b) => genresortord * genres[a].genre.toLowerCase().localeCompare(genres[b].genre.toLowerCase()),
+		(a,b) => genresortord * (genres[b].gamers - genres[a].gamers),
+		(a,b) => genresortord * (genres[b].games - genres[a].games),
+		(a,b) => genresortord * (genres[b].avgh - genres[a].avgh)
+	];
+
 	d3.select("#genretable tbody").selectAll("tr")
-	.data(Object.keys(genres).sort( (a,b) => genres[b].gamers - genres[a].gamers))
+	.data(Object.keys(genres).sort( sortfunc[genresortcol]))		//(a,b) => genres[b].gamers - genres[a].gamers))
 	.join( enter => {
 
 		var tr = enter.append('tr').attr('data-id', d => d);
@@ -39,14 +49,26 @@ function draw_genre() {
 
 	d3.select("#genretable tbody").selectAll("tr").on('click', e => {
 
-		for(e = e.target; e.tagName !== 'TR'; e = e.parentNode)
+		for(e = e.target; e.tagName !== 'TR'; e = e.parentNode)		// e.target.closest('TR');
 			;
 
 		curgenre = e.dataset.id;
-		console.log(curgenre);
 
 		d3.select(`#genretable tr[data-id="${curgenre}"] input`).property('checked', true);
+		draw_genre();
 		draw_table();
+
+	});
+
+	d3.select("#genretable").selectAll('th').on('click', e => {
+
+		var newcol = +e.target.cellIndex;
+		if( newcol === genresortcol )
+			genresortord = -genresortord;
+		else
+			[ genresortcol, genresortord ] = [ newcol, 1 ];
+		
+		draw_genre();
 
 	});
 
