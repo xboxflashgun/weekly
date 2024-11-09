@@ -60,6 +60,11 @@ function cellinfo(e) {
 
 		popup.select('img').attr('src', img);
 
+		console.log(link);
+		
+		d3.select("#imglink").attr("href", link ?? "")
+		.style('pointer-events', link ? null : "none");
+
 		if(genres) 
 			d3.select("#genres").selectAll("span")
 			.data(genres)
