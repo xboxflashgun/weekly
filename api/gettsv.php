@@ -55,7 +55,7 @@ select
 	distinct genreid,
 	genre,
 	sum(gamers) as gamers,
-	count(*) as games,
+	count(distinct titleid) as games,
 	sum(secs) as secs
 from mv_${tab}4
 join gamegenres using(titleid)
