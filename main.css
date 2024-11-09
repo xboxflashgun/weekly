@@ -255,3 +255,8 @@ h1 {
 	color: #ddd;
 }
 
+#genressel {
+	font-weight: bold;
+	color: #ddd;
+	cursor: pointer;
+}

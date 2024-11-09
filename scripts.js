@@ -23,6 +23,7 @@ var showdiff = true;	// show difference with previous period
 var devsel = new Set;
 var period = "week";
 var colsorted = [];
+var curgenre = "0";		// current genre
 
 var compactsel = 1;
 
@@ -31,8 +32,9 @@ function main() {
 	// hide device popup
 	d3.select("#devpopup").style("display", "none");
 	d3.select("#cellinfo").style("display", "none");
+	d3.select("#genrepopup").style("display", "none");
 
-	devsel.add("7");		// Xbox360
+	// devsel.add("7");		// Xbox360
 
 	read_data();
 
@@ -252,6 +254,7 @@ function draw_table() {
 		d3.select(this).style("display", (
 			(filtstr.length > 0 && titleids[t].name.toLowerCase().indexOf(filtstr) < 0)
 			|| (show === "place" && t === "0")
+			|| (curgenre !== "0" && ! devgenres[t].genreids.includes(curgenre))
 			) ? "none" : null);
 
 	});
@@ -347,7 +350,7 @@ function draw_devices() {
 		
 	}, update => {
 
-		update.select('td:nth-child(1)').property('type', 'checkbox').attr('data-id', d => d.devid).property('checked', d => devsel.has(d.devid));
+		update.select('td:nth-child(1)').attr('data-id', d => d.devid).property('checked', d => devsel.has(d.devid));
 		update.select('td:nth-child(2)').text(d => devices[d].devname);
 		update.select('td:nth-child(3)').text(d => devices[d].gamers);
 		update.select('td:nth-child(4)').text(d => devices[d].games);
@@ -529,17 +532,19 @@ function read_data() {
 		pre_calc(gamers);
 		pre_calc(prevper);
 		
+		curgenre = "0";
 		devgenres["0"].genreids = Object.keys(genres);
 		genres["0"] = { genre: '', gamers: gamers["0"]["0"].gamers.abs, games: Object.keys(gamers).length - 1 };
 		genres["0"].avgh = genres["0"].gamers/genres["0"].games/3600;
 
-		console.log(gamers);
-		console.log(devgenres);
-		console.log(genres);
+		// console.log('gamers', gamers);
+		// console.log('devgenres', devgenres);
+		// console.log('genres', genres);
 
 		draw_table();
 		draw_devices();
 		draw_period();
+		draw_genre();
 		d3.select("#accuracy").text(periods[period].accuracy);	// data capture downtime
 		
 	});
