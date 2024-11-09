@@ -67,6 +67,8 @@ function draw_table() {
 	showdiff = d3.select('input[name="showdiff"]').property("checked");
 	dim = d3.select('input[name="dim"]:checked').property("value");
 
+	d3.select("footer a").property('href', `/xboxstat.com.ta.${period}.csv.bz2`);
+
 	var filtstr = d3.select("#filter").property("value").toLowerCase();
 
 	colsorted = Object.keys(gamers[sortcol]);
@@ -97,7 +99,7 @@ function draw_table() {
 		if(compactsel >= 0)
 			return (100*num).toFixed(compactsel) + '%';
 		else
-			return (100*num).toFixed((base >= 10) ? Math.log10(allgamers) || 0 : 0);
+			return (100*num).toFixed((allgamers >= 10) ? Math.log10(allgamers) || 0 : 0) + '%';
 
 	}
 
@@ -480,7 +482,6 @@ function read_data() {
 		genres["0"] = { genre: '', gamers: gamers["0"]["0"].gamers.abs, games: Object.keys(gamers).length - 1 };
 		genres["0"].avgh = genres["0"].gamers/genres["0"].games/3600;
 
-		// console.log('gamers', gamers);
 		// console.log('devgenres', devgenres);
 		// console.log('genres', genres);
 

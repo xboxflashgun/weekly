@@ -267,3 +267,12 @@ h1 {
 #genretable span {
 	padding-left: 6px;
 }
+
+footer {
+	padding: 20px 0px;
+	text-align: right;
+}
+
+a {
+	color: #58a6ff;
+}
