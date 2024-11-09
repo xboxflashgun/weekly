@@ -199,6 +199,8 @@ h1 {
 #cellinfo img {
 	float: left;
 	padding-right: 25px;
+	width: 64px;
+	height: 64px;
 }
 
 #genres span,
