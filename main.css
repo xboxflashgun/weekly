@@ -125,36 +125,39 @@ th.countries {
 	font-weight: bold;
 }
 
-.devpopupbox {
+.popupbox {
 	position: absolute;
 	border: 1px solid #ddd;
 	border-radius: 5px;
 	padding: 0px 10px 10px;
 	cursor: default;
-	background-color: #252;
 	width: auto;
+}
+
+.popuptab {
+	border: 1px solid #ddd;
+	border-collapse: collapse;
+}
+
+.popuptab td,
+.popuptab th {
+	border: 1px solid #ddd;
+	padding: 0px 6px;
+	cursor: pointer;
+}
+
+.popuptab td:nth-child(n+2) {
+	text-align: right;
+}
+
+#devpopup {
+	background-color: #252;
 	top: 40px;
 	left: 800px;
 }
 
 h1 {
 	color: #ccc;
-}
-
-#devtable {
-	border: 1px solid #ddd;
-	border-collapse: collapse;
-}
-
-#devtable td,
-#devtable th {
-	border: 1px solid #ddd;
-	padding: 0px 6px;
-}
-
-#devtable td:nth-child(n+2) {
-	text-align: right;
-	cursor: pointer;
 }
 
 .winclose {
@@ -183,14 +186,8 @@ h1 {
 	top: -4px;
 }
 
-.cellpopupbox {
-	position: absolute;
-	border: 1px solid #ddd;
-	border-radius: 5px;
-	padding: 0px 10px 10px;
-	cursor: default;
+#cellinfo {
 	background-color: #226;
-	width: auto;
 	top: 100px;
 	left: 600px;
 }
@@ -259,4 +256,14 @@ h1 {
 	font-weight: bold;
 	color: #ddd;
 	cursor: pointer;
+}
+
+#genrepopup {
+	top: 40px;
+	left: 600px;
+	background-color: #525;
+}
+
+#genretable span {
+	padding-left: 6px;
 }
