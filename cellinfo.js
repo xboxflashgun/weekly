@@ -116,15 +116,6 @@ function cellinfo(e) {
 
 	popup.select(".winclose").on('click', e => popup.style("display", "none"));
 
-	popup.call(d3.drag()
-		.on('start', e => popup.style("cursor", "grab"))
-		.on('drag',  e => {
-
-			popup.style("top", popup.node().offsetTop + e.dy + "px")
-				 .style("left", popup.node().offsetLeft + e.dx + "px");
-
-		})
-		.on('end', e => popup.style("cursor", "default"))
-	);
+	window_drag(popup);
 
 }

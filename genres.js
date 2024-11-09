@@ -72,4 +72,6 @@ function draw_genre() {
 
 	});
 
+	window_drag(d3.select("#genrepopup"));
+
 }

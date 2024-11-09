@@ -493,3 +493,19 @@ function read_data() {
 	});
 
 }
+
+function window_drag(selector) {
+
+	selector.call(d3.drag()
+		.on('start', e => selector.style("cursor", "grab"))
+		.on('drag',  e => {
+
+			selector.style("top", selector.node().offsetTop + e.dy + "px")
+				 .style("left", selector.node().offsetLeft + e.dx + "px");
+
+		})
+		.on('end', e => selector.style("cursor", "default"))
+	);
+
+}
+

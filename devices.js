@@ -53,6 +53,8 @@ function draw_devices() {
 		.on('click', e => d3.select("#devpopup").style("display", null)); 
 	d3.select("#devpopup .winclose").on('click', e => d3.select("#devpopup").style("display", "none"));
 
+	window_drag(d3.select("#devpopup"));
+
 }
 
 
