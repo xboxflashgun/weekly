@@ -123,6 +123,7 @@ th.countries {
 	cursor: pointer;
 	color: #ddd;
 	font-weight: bold;
+	text-decoration: underline dashed;
 }
 
 .popupbox {
@@ -258,6 +259,7 @@ h1 {
 	font-weight: bold;
 	color: #ddd;
 	cursor: pointer;
+	text-decoration: underline dashed;
 }
 
 #genrepopup {
