@@ -191,6 +191,7 @@ h1 {
 	background-color: #226;
 	top: 100px;
 	left: 600px;
+	width: 30%;
 }
 
 #cellinfo h1 {
@@ -204,16 +205,6 @@ h1 {
 	height: 64px;
 }
 
-#genres span,
-#cellplats span {
-	padding: 0px 6px;
-	background-color: #181;
-	border: 1px solid #181;
-	margin: 0px 6px;
-	border-radius: 5px;
-	color: #ddd;
-}
-
 #cellinfo table {
 	border: 1px solid #bbb;
 	border-collapse: collapse;
@@ -222,8 +213,6 @@ h1 {
 
 #cellinfo th,
 #cellinfo td {
-	border: 1px solid #bbb;
-	padding: 0px 18px;
 }
 
 #cellinfo th:nth-child(1) {
@@ -231,7 +220,13 @@ h1 {
 	padding-left: 6px;
 }
 
-#cellinfo td {
+.tabperiod th,
+.tabperiod td {
+	border: 1px solid #bbb;
+	padding: 2px 18px;
+}
+
+.tabperiod td {
 	text-align: right;
 }
 
@@ -239,15 +234,30 @@ h1 {
 	padding-top: 56px;
 }
 
-#genres span {
-	white-space: nowrap;
-	display: inline-block;
-}
-
 .cellpars {
-	padding-top: 8px;
+	padding: 8px;
 	font-weight: bold;
 	color: #ddd;
+}
+
+.cellpars th,
+.cellpars td {
+	text-align: left;
+	border: 1px solid #bbb;
+	padding: 0px 5px;
+}
+
+.cellpars span {
+	color: #ddd;
+}
+
+.cellbox {
+	background-color: #161;
+	border: 1px solid #161;
+	margin: 0px 2px;
+	padding: 0px 2px;
+	border-radius: 5px;
+	line-height: 18px;
 }
 
 #cellgenres {

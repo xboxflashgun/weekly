@@ -27,8 +27,9 @@ function cellinfo(e) {
 	.then(res => {
 
 		var row = res.split('\t');
+		console.log(row);
 
-		if(row[1])	{
+		if(row[2])	{
 
 			var [ link, released, developer, publisher, category, categories, optimized, compatible, attrs ] = [ 
 				row[0],
@@ -83,25 +84,27 @@ function cellinfo(e) {
 		d3.select("#genres").selectAll("span")
 		.data(devgenres[id].genreids)
 		.join(enter => {
-				enter.append('span').text(g => genres[g].genre);
+				enter.append('span').text(d => ' ')
+					.append('span').classed('cellbox', true).html(g => genres[g].genre.replaceAll(' ', '&nbsp;').replaceAll('-', '&#8209;'));
 			}, update => {
-				update.text(g => genres[g].genre);
+				update.classed('cellbox', true).html(g => genres[g].genre.replaceAll(' ', '&nbsp;').replaceAll('-', '&#8209;'));
 			}, exit => exit.remove()
 		);
 
 		d3.select("#cellplats").selectAll("span")
 		.data(devgenres[id].devids)
 		.join(enter => {
-			enter.append('span').text(p => devices[p].devname);
+			enter.append('span').text(d => ' ')
+				.append('span').classed('cellbox', true).text(p => devices[p].devname);
+				// html(g => genres[g].genre.replaceAll(' ', '&nbsp;').replaceAll('-', '&#8209;'));
+			// enter.append('span').text(p => devices[p].devname);
 		}, update => {
-			update.text(p => devices[p].devname);
+			update.classed('cellbox', true).text(p => devices[p].devname);
 		}, exit => exit.remove()
 		);
 
 		d3.select("#celldevel").text(developer);
 		d3.select("#cellpublisher").text(publisher);
-
-		return;
 
 		var [ cell1, cell2 ] = [ gamers[id][colsorted[col-1]], prevper[id][colsorted[col-1]] ];
 

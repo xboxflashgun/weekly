@@ -17,7 +17,29 @@ $t = $_GET["t"];
 
 $req = "";
 
-echo implode(pg_copy_to($db, "(
+if($t == "0")
+
+	echo implode(pg_copy_to($db, "(
+
+select 
+	'',
+	'',
+	count(distinct developer) || ' total',
+	count(distinct publisher) || ' total',
+	count(distinct category) || ' total',
+	'',
+	'',
+	'',
+	'{}',
+	'',
+	'' 
+from mv_week1 
+join products using(titleid)
+
+	)", chr(9)));
+
+else
+	echo implode(pg_copy_to($db, "(
 
 select 
 	bigid,
