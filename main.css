@@ -280,3 +280,10 @@ footer {
 a {
 	color: #58a6ff;
 }
+
+.bold {
+	font-weight: bold;
+	color: #ddd;
+	cursor: pointer;
+}
+

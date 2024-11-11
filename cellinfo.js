@@ -27,27 +27,41 @@ function cellinfo(e) {
 	.then(res => res.text())
 	.then(res => {
 
-		res.split('\n').forEach(s => {
+		var row = res.split('\t');
 
-			if(s.length === 0)
-				return;
+		if(row[1])	{
 
-			var row = s.split('\t');
-			link = row[0];
-			genres = row[1].split('|');
-			imgs = JSON.parse(row[2])[0];
+			var [ link, released, developer, publisher, category, categories, optimized, compatible, attrs ] = [ 
+				row[0],
+				new Date(row[1]),
+				row[2],
+				row[3],
+				row[4],
+				row[5].split('|'),			// categories
+				row[6].split('|'),			// optimized
+				row[7].split('|'),			// compatible
+				JSON.parse(row[8]),			// attributes
+			];
 
-		});
+			var imgs = {};
 
-		var img;
+			row[9].split('|').forEach( r => {
 
-		if( imgs )
-			imgs.forEach( i => {
-				if( i.Purpose === 'BoxArt' && +i.Width >= 160)
-					img = i.ResizeUrl;
-				else if( i.ImagePurpose === 'BoxArt' )
-					img = i.Uri;
+				var row = r.split(':');
+				imgs[row[0]] = row[1];
+
 			});
+
+			var img;
+
+			img ??= imgs.BoxArt;
+			img ??= imgs.Logo;
+			img ??= imgs.logo;
+			img ??= imgs.Poster;
+			img ??= imgs.BrandedKeyArt;
+
+		}
+
 
 		if( ! img )
 			img = 'https://store-images.s-microsoft.com/image/apps.52902.70775362622833233.2297d754-dc3e-47c7-bef3-00c95ef0ef65.c7b5eb4b-0f1a-44ba-bc1d-11617c9a5ee2?mode=scale';
@@ -60,11 +74,18 @@ function cellinfo(e) {
 
 		popup.select('img').attr('src', img);
 
-		console.log(link);
+		if(compatible)
+			link = "https://www.xbox.com/games/store/name/" + link;
+		else
+			link = "https://apps.microsoft.com/detail/" + link;
+
+		console.log(id, link);
 		
 		d3.select("#imglink").attr("href", link ?? "")
 		.style('pointer-events', link ? null : "none");
 
+		return;
+	
 		if(genres) 
 			d3.select("#genres").selectAll("span")
 			.data(genres)

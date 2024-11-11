@@ -155,6 +155,8 @@ function draw_table() {
 		exit.remove();
 
 	});
+	d3.select("#maintable thead tr").append('th').classed('bold', true).html('+');
+
 	// show arrow
 	d3.selectAll("th.countries").classed("sortasc", false).classed("sortdesc", false);
 	d3.select(`th[data-id="${sortrow}"]`).classed( (sortroword > 0) ? "sortasc" : "sortdesc", true);

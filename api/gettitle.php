@@ -19,16 +19,22 @@ $req = "";
 
 echo implode(pg_copy_to($db, "(
 
-	select 
-		link,
-		string_agg(genre, '|'),
-		images 
-	from xboxgames 
-	join gamegenres using(titleid) 
-	join genres using (genreid) 
-	where 
-		titleid=$t 
-	group by 1,3
+select 
+	bigid,
+	released,
+	developer,
+	publisher,
+	category,
+	array_to_string(categories,'|') as categories,
+	array_to_string(optimized,'|') as optimized,
+	array_to_string(compatible,'|') as compatible,
+	attributes,
+	string_agg(purpose || ':' || uri,'|') as images, 
+	type
+from products 
+join images using(bigid) 
+where titleid=$t
+group by 1,2,3,4,5,6,7,8,9,11
 
 )", chr(9)));
 
