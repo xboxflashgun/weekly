@@ -108,6 +108,8 @@ function cellinfo(e) {
 		d3.select("#cellpublisher").text(publisher);
 		d3.select("#cellreleased").text(released ? released.toLocaleDateString() : '');
 
+		console.log(compatible);
+
 		var [ cell1, cell2 ] = [ gamers[id][colsorted[col-1]], prevper[id][colsorted[col-1]] ];
 
 		//////////////////////

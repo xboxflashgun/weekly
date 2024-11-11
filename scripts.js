@@ -73,11 +73,11 @@ function draw_table() {
 	var filtstr = d3.select("#filter").property("value").toLowerCase();
 
 	colsorted = Object.keys(gamers[sortcol]);
+	// colsorted.splice(2,2);
 
 	const sort1 = function(a, b) { return sortcolord * (gamers[sortcol][b][dim][show] - gamers[sortcol][a][dim][show]); };
 
 	colsorted.sort(sort1);
-
 
 
 	////////////
