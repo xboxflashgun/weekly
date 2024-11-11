@@ -21,7 +21,6 @@ function cellinfo(e) {
 
 	var link;
 	var imgs;
-	var genres;
 
 	fetch("api/gettitle.php?t=" + id)
 	.then(res => res.text())
@@ -62,7 +61,6 @@ function cellinfo(e) {
 
 		}
 
-
 		if( ! img )
 			img = 'https://store-images.s-microsoft.com/image/apps.52902.70775362622833233.2297d754-dc3e-47c7-bef3-00c95ef0ef65.c7b5eb4b-0f1a-44ba-bc1d-11617c9a5ee2?mode=scale';
 		else if( img.substring(0, 4) !== 'http')
@@ -79,24 +77,17 @@ function cellinfo(e) {
 		else
 			link = "https://apps.microsoft.com/detail/" + link;
 
-		console.log(id, link);
-		
 		d3.select("#imglink").attr("href", link ?? "")
 		.style('pointer-events', link ? null : "none");
 
-		return;
-	
-		if(genres) 
-			d3.select("#genres").selectAll("span")
-			.data(genres)
-			.join(enter => {
-					enter.append('span').text(g => g);
-				}, update => {
-					update.text(g => g);
-				}, exit => exit.remove()
-			);
-		else
-			d3.selectAll("#genres span").remove();
+		d3.select("#genres").selectAll("span")
+		.data(devgenres[id].genreids)
+		.join(enter => {
+				enter.append('span').text(g => genres[g].genre);
+			}, update => {
+				update.text(g => genres[g].genre);
+			}, exit => exit.remove()
+		);
 
 		d3.select("#cellplats").selectAll("span")
 		.data(devgenres[id].devids)
@@ -106,6 +97,11 @@ function cellinfo(e) {
 			update.text(p => devices[p].devname);
 		}, exit => exit.remove()
 		);
+
+		d3.select("#celldevel").text(developer);
+		d3.select("#cellpublisher").text(publisher);
+
+		return;
 
 		var [ cell1, cell2 ] = [ gamers[id][colsorted[col-1]], prevper[id][colsorted[col-1]] ];
 

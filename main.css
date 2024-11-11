@@ -244,7 +244,7 @@ h1 {
 	display: inline-block;
 }
 
-#cellplatsdiv {
+.cellpars {
 	padding-top: 8px;
 	font-weight: bold;
 	color: #ddd;
