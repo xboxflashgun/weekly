@@ -12,36 +12,49 @@
 	<script src="cellinfo.js"></script>
 	<script src="genres.js"></script>
 	<script src="devices.js"></script>
+	<script src="countryselect.js"></script>
 </head>
 <body onload="main()">
 	<div id="params">
+		
 		<span class="box">
 			<span class="period">
 				Period
 			</span>: 
 			<span class="qmark">?</span>
 		</span>
+		
 		<span class="box">
 			Devices: <span id="devselect">All</span>
 		</span>
+		
 		<span class="box">
 			Genre: <span id="genressel">???</span>
 			<span class="qmark">?</span>
 		</span>
+		
+		<span class="box">
+			<span id="countsel">Countries</span>
+			<span class="qmark">?</span>
+		</span>
+
 		<span class="box">
 			Show: 
 			<label><input type="radio" name="dim" value="avgh">Hours</label>
 			<label><input type="radio" name="dim" value="gamers" checked>Gamers</label>
 		</span>
+		
 		<span class="box">
 			As: 
 			<label><input type="radio" name="valform" value="place">Place</label>
 			<label><input type="radio" name="valform" value="perc" checked>Percentage</label>
 			<label><input type="radio" name="valform" value="abs">Numbers</label>
 		</span>
+		
 		<span class="box">
 			<label><input type="checkbox" name="showdiff" checked>Difference with previous week</label>
 		</span>
+		
 		<span class="box">
 			Compact numbers: <select onchange="setcompact()" id="compactsel">
 				<option value="-1">no</option>
@@ -50,10 +63,12 @@
 				<option value="2">0.01</option>
 			</select>
 		</span>
+		
 		<span class="box">
 			DCD: <span id="accuracy"></span>
 			<span class="qmark">?</span>
 		</span>
+
 	</div>
 
 	<div>
@@ -137,6 +152,15 @@
 			</tbody>
 		</table>
 	</div>
+
+	<div id="countryselect" class="popupbox">
+		<div class="winclose">&#x2715;</div>
+		<h1>Select Countries to show</h1>
+		<table class="cellpars popuptab">
+			<thead><tr><th>Country</th><th>Gamers</th><th>Avg. Hours</th></tr></thead>
+			<tbody>
+			</tbody>
+		</table>
 
 	<footer><a href="#">Download raw data</a></footer>
 

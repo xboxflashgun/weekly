@@ -34,8 +34,9 @@ function main() {
 	d3.select("#devpopup").style("display", "none");
 	d3.select("#cellinfo").style("display", "none");
 	d3.select("#genrepopup").style("display", "none");
+	d3.select("#countryselect").style("display", "none");
 
-	// devsel.add("7");		// Xbox360
+	devsel.add("7");		// Xbox360
 
 	read_data();
 
@@ -72,8 +73,11 @@ function draw_table() {
 
 	var filtstr = d3.select("#filter").property("value").toLowerCase();
 
-	colsorted = Object.keys(gamers[sortcol]);
+	// colsorted = Object.keys(gamers[sortcol]);
 	// colsorted.splice(2,2);
+
+	colsorted = ["0"];
+	d3.selectAll("#countryselect input:checked").each( d => colsorted.push(d) );
 
 	const sort1 = function(a, b) { return sortcolord * (gamers[sortcol][b][dim][show] - gamers[sortcol][a][dim][show]); };
 
@@ -156,7 +160,7 @@ function draw_table() {
 		exit.remove();
 
 	});
-	d3.select("#maintable thead tr").append('th').classed('bold', true).html('&#xff0b;');
+	// d3.select("#maintable thead tr").append('th').classed('bold', true).html('&#xff0b;');
 
 	// show arrow
 	d3.selectAll("th.countries").classed("sortasc", false).classed("sortdesc", false);
@@ -296,7 +300,7 @@ var strparser = [
 	s => {		// 2: countries
 		var row = s.split('\t');	// [ gamers, secs, countryid, country, countryname ]
 		var c = (row[2] === '\\N') ? "0" : row[2];
-		countries[c] = { country: row[3], countryname: row[4], gamers: +row[0], secs: +row[1] };
+		countries[c] = { country: row[3], countryname: row[4], gamers: +row[0], secs: +row[1], avgh: +row[1]/+row[0]/3600 };
 		allcountries += +row[0];
 	},
 	s => {		// 3: devices
@@ -492,6 +496,9 @@ function read_data() {
 		// console.log('devgenres', devgenres);
 		// console.log('genres', genres);
 
+		draw_country();
+		d3.select("#countryselect tbody").selectAll('input').property('checked', true);		// mark all countries
+	
 		draw_table();
 		draw_devices();
 		draw_period();

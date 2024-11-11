@@ -119,7 +119,8 @@ th.countries {
 	background-color: #666;
 }
 
-#devselect {
+#devselect,
+#countsel {
 	cursor: pointer;
 	color: #ddd;
 	font-weight: bold;
@@ -297,3 +298,12 @@ a {
 	cursor: pointer;
 }
 
+#countryselect {
+	top: 40px;
+	left: 1000px;
+	background-color: #255;
+}
+
+#countryselect td:nth-child(n+2) {
+	text-align: right;
+}

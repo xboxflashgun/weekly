@@ -35,15 +35,6 @@ function draw_genre() {
 
 	);
 
-	/*
-	d3.select("#genretable").selectAll("input").on('change', e => {
-
-		curgenre = e.target.dataset.id;
-		d3.select("#genressel").text( (curgenre === "0") ? "All" : genres[curgenre].genre);
-		draw_table();
-
-	}); */
-
 	d3.select("#genressel").text( (curgenre === "0") ? "All" : genres[curgenre].genre).on('click', () => d3.select("#genrepopup").style("display", null));
 	d3.select("#genrepopup .winclose").on('click', e => d3.select("#genrepopup").style("display", "none"));
 
