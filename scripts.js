@@ -6,6 +6,7 @@ var devices = {};		// devices[devid] = { gamers, games, devname }
 var periods = {};		// periods[period] = { ts1: ts2: ts3 } 
 var devgenres = {};		// devgenres[titleid] = { devids: [1,2,3], genreids: [6,7,8] };
 var genres = {};		// genrelist[genreid] = { genre, gamers, games, avgh };
+var langs = {};			// langs[countryid] = { lang: , path: }
 
 var grouped;
 
@@ -163,7 +164,7 @@ function draw_table() {
 
 	/////////////
 	// draw rows
-	
+
 	d3.select("#maintable tbody").selectAll('tr')
 	.data(rowsorted)
 	.join( enter => {
@@ -335,7 +336,8 @@ var strparser = [
 		genres[row[0]] = { genre: row[1], gamers: +row[2], games: +row[3], avgh: +row[2]/+row[3]/3600 };
 	},
 	s => {		// 8: countryid, lang, path
-		// 
+		var row = s.split('\t');
+		langs[row[0]] = { lang: row[1], path: row[2] };
 	},
 ];
 
@@ -397,7 +399,7 @@ function read_data() {
 
 	var devids = (devsel.size > 0) ? `&devids=${Array.from(devsel).join(',')}` : '';
 
-	for( let i = 0; i != 7; i++ )
+	for( let i = 0; i < strparser.length; i++ )
 		pr.push(fetch(`api/gettsv.php?tab=${period}&num=${i}${devids}`)
 			.then(res => res.text())
 			.then(res => {

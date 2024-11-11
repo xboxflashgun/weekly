@@ -28,7 +28,7 @@ function cellinfo(e) {
 
 		var row = res.split('\t');
 
-		if(row[2])	{
+		if(id !== "0")	{
 
 			var [ link, released, developer, publisher, category, categories, optimized, compatible, attrs ] = [ 
 				row[0],
@@ -72,8 +72,10 @@ function cellinfo(e) {
 
 		popup.select('img').attr('src', img);
 
+		console.log(langs, colsorted[col-1]);
+
 		if(compatible)
-			link = "https://www.xbox.com/games/store/name/" + link;
+			link = `https://www.xbox.com/${langs[colsorted[col-1]].path}/games/store/name/${link}`;
 		else
 			link = "https://apps.microsoft.com/detail/" + link;
 
