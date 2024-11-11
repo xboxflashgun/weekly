@@ -27,7 +27,6 @@ function cellinfo(e) {
 	.then(res => {
 
 		var row = res.split('\t');
-		console.log(row);
 
 		if(row[2])	{
 
@@ -105,6 +104,7 @@ function cellinfo(e) {
 
 		d3.select("#celldevel").text(developer);
 		d3.select("#cellpublisher").text(publisher);
+		d3.select("#cellreleased").text(released ? released.toLocaleDateString() : '');
 
 		var [ cell1, cell2 ] = [ gamers[id][colsorted[col-1]], prevper[id][colsorted[col-1]] ];
 

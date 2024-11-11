@@ -334,6 +334,9 @@ var strparser = [
 		var row = s.split('\t');
 		genres[row[0]] = { genre: row[1], gamers: +row[2], games: +row[3], avgh: +row[2]/+row[3]/3600 };
 	},
+	s => {		// 8: countryid, lang, path
+		// 
+	},
 ];
 
 //////////////
@@ -394,7 +397,7 @@ function read_data() {
 
 	var devids = (devsel.size > 0) ? `&devids=${Array.from(devsel).join(',')}` : '';
 
-	for( let i = 0; i <= 7; i++ )
+	for( let i = 0; i != 7; i++ )
 		pr.push(fetch(`api/gettsv.php?tab=${period}&num=${i}${devids}`)
 			.then(res => res.text())
 			.then(res => {
