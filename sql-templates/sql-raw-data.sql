@@ -6,8 +6,8 @@ select
 	countryname,
 	mv_%period%4.secs,
 	devname
-from mv_week4
-join mv_week1 using(titleid)
-join mv_week3 using(devid)
-join mv_week2 using(countryid)
+from mv_%period%4
+join mv_%period%1 using(titleid)
+join mv_%period%3 using(devid)
+join mv_%period%2 using(countryid)
 where mv_%period%4.gamers>0
