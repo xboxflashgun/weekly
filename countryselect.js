@@ -64,6 +64,20 @@ function draw_country() {
 	d3.select("#countsel").on('click', e => div.style("display", null));
 
 	window_drag(div);
+	var maxnum = [ 5, 10, 15, -1 ];
+
+	d3.select("#countrymark").on('click', e => {
+
+		var sel = +e.target.dataset.id;
+		div.select("tbody").selectAll("input").each( function(c, i) {
+
+			d3.select(this).property('checked', i < maxnum[sel]);
+
+		});
+
+		draw_table();
+
+	});
 
 }
 

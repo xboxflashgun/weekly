@@ -326,4 +326,20 @@ a {
 	padding-right: 16px;
 }
 
+#countrymark {
+	font-size: 13px;
+	padding-top: 14px;
+	text-align: right;
+	float: right;
+}
 
+#countrymark li {
+	padding: 2px 0px;
+	color: #ddd;
+	cursor: pointer;
+	text-decoration: underline dashed;
+}
+
+#countrymark li::marker {
+	content: none;
+}
