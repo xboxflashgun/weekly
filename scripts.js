@@ -48,6 +48,8 @@ function setcompact(e) {
 	compactsel = +d3.select("#compactsel option:checked").property("value");
 	draw_table();
 	draw_devices();
+	draw_genre();
+	draw_country();
 
 }
 
