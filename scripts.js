@@ -36,7 +36,8 @@ function main() {
 	d3.select("#genrepopup").style("display", "none");
 	d3.select("#countryselect").style("display", "none");
 
-	devsel.add("7");		// Xbox360
+	// devsel.add("7");		// Xbox360
+	// devsel.add("4");		// WindowsOneCore
 
 	read_data();
 
@@ -143,12 +144,13 @@ function draw_table() {
 							+ `${ grew ^ (show === "place")? '+' : '' }`
 							+ `${fff(gamers[t][c][dim][show] - prevper[t][c][dim][show])}</sup>`;
 
-				}
+				} else if(showdiff && !prevper[t])
+					gamers[t][c].cell += '<sup class="new">NEW</sup>';
 
 			}
 
 		} else
-			gamers[t][c].cell = `<span class="out">${(prevper[t][c].gamers.abs > 0) ? "OUT" : "&mdash;"}</span>`;
+			gamers[t][c].cell = `<span class="out">${( !!prevper[t] && prevper[t][c].gamers.abs > 0) ? "OUT" : "&mdash;"}</span>`;
 
 	}));
 
@@ -412,6 +414,7 @@ function read_data() {
 	sortcolord = 1;
 	sortrow = "0";
 	sortroword = 1;
+	langs["0"] = { lang: 'Neutral', path: '' }
 
 	var devids = (devsel.size > 0) ? `&devids=${Array.from(devsel).join(',')}` : '';
 

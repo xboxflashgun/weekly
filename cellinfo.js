@@ -20,6 +20,11 @@ function cellinfo(e) {
 	popup.style("display", null);
 
 	var p = [];		// promises
+	var released, developer, publisher;
+	
+	d3.select("#celldevel").text('');
+	d3.select("#cellpublisher").text('');
+	d3.select("#cellreleased").text('');
 
 	p.push(fetch("api/gettitle.php?t=" + id)
 	.then(res => res.text())
@@ -30,11 +35,14 @@ function cellinfo(e) {
 
 		var row = res.split('\t');
 
-		var [ link, released, developer, publisher, category, categories, optimized, compatible, attrs ] = [ 
-			row[0],
+		[ released, developer, publisher ] = [
 			new Date(row[1]),
 			row[2],
 			row[3],
+		];
+
+		var [ link, category, categories, optimized, compatible, attrs ] = [ 
+			row[0],
 			row[4],
 			row[5] ? row[5].split('|') : [''],			// categories
 			row[6] ? row[6].split('|') : [''],			// optimized
@@ -79,10 +87,6 @@ function cellinfo(e) {
 		d3.select("#imglink").attr("href", link ?? "")
 		.style('pointer-events', link ? null : "none");
 
-		d3.select("#celldevel").text(developer);
-		d3.select("#cellpublisher").text(publisher);
-		d3.select("#cellreleased").text(released ? released.toLocaleDateString() : '');
-
 	}));
 
 	p.push(fetch("api/gett360.php?t=" + id)
@@ -93,20 +97,17 @@ function cellinfo(e) {
 			return;
 
 		var row = res.split('\t');
-		var [ released, developer, publisher, categories, imgs, attrs ] = [ 
+		[ released, developer, publisher ] = [
 			new Date(row[1]),							// released
 			row[2],										// developer
 			row[3],										// publisher
+		];
+
+		var [ categories, imgs, attrs ] = [ 
 			row[4] ? JSON.parse(row[4]) : {},			// genres
 			row[5] ? JSON.parse(row[5]) : {},			// images
 			row[6] ? JSON.parse(row[6]) : {},			// attributes
 		];
-
-		console.log(id, imgs, attrs);
-
-		d3.select("#celldevel").text(developer);
-		d3.select("#cellpublisher").text(publisher);
-		d3.select("#cellreleased").text(released ? released.toLocaleDateString() : '');
 
 		var img = imgs.filter(d => d.Purpose === 'BoxArt')[0].ResizeUrl;
 		img ??= imgs.filter(d => d.Purpose === 'WideBackgroundImage')[0].ResizeUrl;
@@ -121,12 +122,18 @@ function cellinfo(e) {
 		img += (img.indexOf('?') < 0) ? '?' : '&';
 		img += 'w=64';
 		popup.select('img').attr('src', img);
+
+		d3.select("#imglink").style('pointer-events', "none");		// no more links to xbox 360 games :(
 		
 
 	}));
 
 	Promise.all(p)
 	.then( p => {
+
+		d3.select("#celldevel").text(developer);
+		d3.select("#cellpublisher").text(publisher);
+		d3.select("#cellreleased").text(released ? released.toLocaleDateString() : '');
 
 		d3.select("#genres").selectAll("span")
 		.data(devgenres[id].genreids)
@@ -147,8 +154,6 @@ function cellinfo(e) {
 			update.classed('cellbox', true).text(p => devices[p].devname);
 		}, exit => exit.remove()
 		);
-
-		var [ cell1, cell2 ] = [ gamers[id][colsorted[col-1]], prevper[id][colsorted[col-1]] ];
 
 		//////////////////////
 		// fill table cellinfo
@@ -178,8 +183,22 @@ function cellinfo(e) {
 		}
 
 		popup.selectAll(".cellinfocountry").text(countries[colsorted[col-1]].country);
-		fill_tab(cell1, "t");
-		fill_tab(cell2, "p");
+
+		fill_tab(gamers[id][colsorted[col-1]], 't');
+
+		if( prevper[id] )
+
+			fill_tab(prevper[id][colsorted[col-1]], "p");
+
+		else				// clean prev cells
+			[ 'avgh', 'gamers' ].forEach( p => {
+				[ 'abs', 'perc', 'place' ].forEach( k => {
+
+					popup.select(`#p${p+k}`).text('');
+					popup.select(`#p${p+k}0`).text('');
+
+				});
+			});
 
 	});
 
