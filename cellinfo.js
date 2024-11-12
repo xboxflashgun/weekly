@@ -138,20 +138,28 @@ function cellinfo(e) {
 		d3.select("#genres").selectAll("span")
 		.data(devgenres[id].genreids)
 		.join(enter => {
-				enter.append('span').text(d => ' ')
+				
+			enter.append('span').text(d => ' ')
 					.append('span').classed('cellbox', true).html(g => genres[g].genre.replaceAll(' ', '&nbsp;').replaceAll('-', '&#8209;'));
-			}, update => {
-				update.classed('cellbox', true).html(g => genres[g].genre.replaceAll(' ', '&nbsp;').replaceAll('-', '&#8209;'));
-			}, exit => exit.remove()
+			
+		}, update => {
+				
+				update.select('.cellbox').html(g => genres[g].genre.replaceAll(' ', '&nbsp;').replaceAll('-', '&#8209;'));
+			
+		}, exit => exit.remove()
 		);
 
 		d3.select("#cellplats").selectAll("span")
 		.data(devgenres[id].devids)
 		.join(enter => {
+
 			enter.append('span').text(d => ' ')
 				.append('span').classed('cellbox', true).text(p => devices[p].devname);
+
 		}, update => {
-			update.classed('cellbox', true).text(p => devices[p].devname);
+
+			update.select('.cellbox').text(p => devices[p].devname);
+		
 		}, exit => exit.remove()
 		);
 
