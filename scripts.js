@@ -22,7 +22,7 @@ var show = "abs";	// cell format: "gamers"/"perc"/"place"
 var dim  = "avgh";	// table info: "gamers"/"avgh"
 var showdiff = true;	// show difference with previous period
 var devsel = new Set;
-var period = "week";
+var period = "day";
 var colsorted = [];
 var curgenre = "0";		// current genre
 
@@ -36,7 +36,7 @@ function main() {
 	d3.select("#genrepopup").style("display", "none");
 	d3.select("#countryselect").style("display", "none");
 
-	devsel.add("7");		// Xbox360
+	// devsel.add("7");		// Xbox360
 
 	read_data();
 
@@ -123,20 +123,32 @@ function draw_table() {
 
 		if(gamers[t][c][dim][show]) {
 
-			gamers[t][c].cell = `${fff(gamers[t][c][dim][show])}`;
-			if(showdiff && prevper[t] && gamers[t][c][dim][show] !== prevper[t][c][dim][show])  {
+			if(gamers[t][c].gamers.abs === 0)
+				if(prevper[t][c].gamers.abs === 0)
+					gamers[t][c].cell = '<span class="out">&mdash;</span>';
+				else
+					gamers[t][c].cell = '<span class="out">OUT</span>';
+			else {
 
-				var grew = (gamers[t][c][dim][show] > prevper[t][c][dim][show]);
-				grew = (show === "place") ? !grew : grew;
+				gamers[t][c].cell = `${fff(gamers[t][c][dim][show])}`;
+				if(showdiff && prevper[t] && gamers[t][c][dim][show] !== prevper[t][c][dim][show])  {
 
-				gamers[t][c].cell += `<sup class="${ grew ? "arrowup" : "arrowdown"}">`
-					+ `${ grew ^ (show === "place")? '+' : '' }`
-					+ `${fff(gamers[t][c][dim][show] - prevper[t][c][dim][show])}</sup>`;
+					var grew = (gamers[t][c][dim][show] > prevper[t][c][dim][show]);
+					grew = (show === "place") ? !grew : grew;
+
+					if( prevper[t][c].gamers.abs === 0)
+						gamers[t][c].cell += '<sup class="new">NEW</sup>';
+					else
+						gamers[t][c].cell += `<sup class="${ grew ? "arrowup" : "arrowdown"}">`
+							+ `${ grew ^ (show === "place")? '+' : '' }`
+							+ `${fff(gamers[t][c][dim][show] - prevper[t][c][dim][show])}</sup>`;
+
+				}
 
 			}
 
 		} else
-			gamers[t][c].cell = '';
+			gamers[t][c].cell = `<span class="out">${(prevper[t][c].gamers.abs > 0) ? "OUT" : "&mdash;"}</span>`;
 
 	}));
 

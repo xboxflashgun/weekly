@@ -307,3 +307,18 @@ a {
 #countryselect td:nth-child(n+2) {
 	text-align: right;
 }
+
+.new {
+	color: #2d2;
+	font-weight: bold;
+	font-size: 9px;
+	padding-left: 4px;
+}
+
+.out {
+	color: #f93838;
+	font-weight: bold;
+	padding-right: 16px;
+}
+
+

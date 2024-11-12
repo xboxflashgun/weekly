@@ -72,8 +72,6 @@ function cellinfo(e) {
 
 		popup.select('img').attr('src', img);
 
-		console.log(langs, colsorted[col-1]);
-
 		if(compatible)
 			link = `https://www.xbox.com/${langs[colsorted[col-1]].path}/games/store/name/${link}`;
 		else
@@ -97,8 +95,6 @@ function cellinfo(e) {
 		.join(enter => {
 			enter.append('span').text(d => ' ')
 				.append('span').classed('cellbox', true).text(p => devices[p].devname);
-				// html(g => genres[g].genre.replaceAll(' ', '&nbsp;').replaceAll('-', '&#8209;'));
-			// enter.append('span').text(p => devices[p].devname);
 		}, update => {
 			update.classed('cellbox', true).text(p => devices[p].devname);
 		}, exit => exit.remove()
@@ -124,11 +120,13 @@ function cellinfo(e) {
 				Object.keys(cell[p]).forEach( k => {
 
 					var t = compact(cell[p][k] * ((k === "perc")? 100 : 1)) + ((k === "perc") ? "%" : "");
+					t = (cell.gamers.abs === 0) ? '' : t;
 					popup.select(`#${sel+p+k}`).text(t);
 
 					// world
 					t = compact( ((sel === "t") ? gamers["0"][colsorted[col-1]][p][k] : prevper["0"][colsorted[col-1]][p][k]) * ((k === "perc")? 100 : 1));
 					t = t + ((k === "perc") ? "%" : "");
+					t = (cell.gamers.abs === 0) ? '' : '(' + t + ')';
 					popup.select(`#${sel+p+k}0`).text(t);
 
 				});
