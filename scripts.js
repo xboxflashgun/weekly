@@ -36,7 +36,7 @@ function main() {
 	d3.select("#genrepopup").style("display", "none");
 	d3.select("#countryselect").style("display", "none");
 
-	// devsel.add("7");		// Xbox360
+	devsel.add("7");		// Xbox360
 
 	read_data();
 

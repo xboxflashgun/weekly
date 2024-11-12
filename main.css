@@ -202,8 +202,8 @@ h1 {
 #cellinfo img {
 	float: left;
 	padding-right: 25px;
-	width: 64px;
 	height: 64px;
+	max-width: 64px;
 }
 
 #cellinfo table {
