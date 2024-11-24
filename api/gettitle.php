@@ -8,7 +8,7 @@ foreach ($_GET as $k => $v)
         die("Oops: $k, $v");
 
 # don't be bothered with the password here: it's only for local connections, no remote
-$db = pg_connect("port=6432 host=/tmp dbname=global user=readonly password=masha27uk")
+$db = pg_connect("port=6432 host=/tmp dbname=dipa user=readonly password=masha27uk")
 	or die("could not connect to DB");
 
 $rep = "";

@@ -62,10 +62,11 @@ function cellinfo(e) {
 
 		var img;
 
+		img ??= imgs.Poster;
+		img ??= imgs.FeaturePromotionalSquareArt;
 		img ??= imgs.BoxArt;
 		img ??= imgs.Logo;
 		img ??= imgs.logo;
-		img ??= imgs.Poster;
 		img ??= imgs.BrandedKeyArt;
 
 		if( ! img )
@@ -125,7 +126,6 @@ function cellinfo(e) {
 
 		d3.select("#imglink").style('pointer-events', "none");		// no more links to xbox 360 games :(
 		
-
 	}));
 
 	Promise.all(p)
