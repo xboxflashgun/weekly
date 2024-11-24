@@ -13,6 +13,7 @@
 	<script src="genres.js"></script>
 	<script src="devices.js"></script>
 	<script src="countryselect.js"></script>
+	<script src="periods.js"></script>
 </head>
 <body onload="main()">
 	<div id="params">
@@ -172,6 +173,34 @@
 			<li data-id="2">Select top-15 countries
 			<li data-id="3">Deselect all
 		</ul>
+	</div>
+
+	<div id="periodselect" class="popupbox">
+		<div class="winclose">&#x2715;</div>
+		<h1>Select period to show</h1>
+		<table>
+			<thead>
+				<th colspan="2">Period</th><th>Dates</th><th>Gamers</th><th>Hours</th><th>Accuracy</th>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input type="radio" name="period" value="day"></td>
+					<td><h2>Day</h2></td>
+					<td>day</td>
+					<td>?</td>
+					<td>?</td>
+					<td>?</td>
+				</tr>
+				<tr>
+					<td><input type="radio" name="period" value="week" checked></td>
+					<td><h2>Week</h2></td>
+					<td>week</td>
+					<td>?</td>
+					<td>?</td>
+					<td>?</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
 	<footer><a href="#">Download raw data</a></footer>

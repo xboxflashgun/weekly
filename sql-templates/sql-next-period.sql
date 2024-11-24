@@ -49,6 +49,34 @@ begin;
 		        ts3=date_trunc('%period%', now()),
 		        accuracy=EXCLUDED.accuracy;
 
+	insert into mv_periods(period,gamers4,hours4) 
+		select 
+			'%period%' as period,
+			gamers as gamers4,
+			secs/3600./gamers  as hours4 
+		from mv_%period%4 
+		where 
+			titleid is null 
+			and countryid is null 
+			and devid is null
+	on conflict(period) do update 
+		set gamers4=EXCLUDED.gamers4,
+		hours4=EXCLUDED.hours4;
+
+	insert into mv_periods(period,gamers5,hours5) 
+		select 
+			'%period%' as period,
+			gamers as gamers5,
+			secs/3600./gamers  as hours5 
+		from mv_%period%5
+		where 
+			titleid is null 
+			and countryid is null 
+			and devid is null
+	on conflict(period) do update 
+		set gamers5=EXCLUDED.gamers5,
+		hours5=EXCLUDED.hours5;
+
 commit;
 
 

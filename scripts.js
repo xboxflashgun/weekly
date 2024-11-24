@@ -520,6 +520,7 @@ function read_data() {
 		draw_devices();
 		draw_period();
 		draw_genre();
+		draw_periods();
 		d3.select("#accuracy").text(periods[period].accuracy);	// data capture downtime
 		
 	});
