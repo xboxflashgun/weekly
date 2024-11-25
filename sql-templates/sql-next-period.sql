@@ -77,6 +77,18 @@ begin;
 		set gamers5=EXCLUDED.gamers5,
 		hours5=EXCLUDED.hours5;
 
+	insert into mv_periods(period,avgsecs)
+		select
+			'%period%' as period,
+			avg(secs)::int as avgsecs
+		from perflog
+			where
+				prog='presence'
+				and prestime>= date_trunc('%period%', now()-interval '2 %period%s')
+				and prestime < date_trunc('%period%', now()-interval '1 %period%')
+	on conflict(period) do update
+		set avgsecs=EXCLUDED.avgsecs;
+
 commit;
 
 
