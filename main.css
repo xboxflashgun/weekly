@@ -163,6 +163,7 @@ th.countries {
 	background-color: #252;
 	top: 40px;
 	left: 400px;
+	max-width: 500px;
 }
 
 h1 {
@@ -289,6 +290,7 @@ h1 {
 	top: 40px;
 	left: 600px;
 	background-color: #525;
+	max-width: 450px;
 }
 
 #genretable span {
