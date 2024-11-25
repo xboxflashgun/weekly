@@ -50,6 +50,7 @@ function setcompact(e) {
 	draw_devices();
 	draw_genre();
 	draw_country();
+	draw_periods();
 
 }
 
@@ -364,13 +365,13 @@ var strparser = [
 //////////////
 // draw period
 
-function period_totext(ts3, ts2) {
+function period_totext(ts3, ts2, per) {
 
 	var pername;
 
-	if(period === "day")
+	if(per === "day")
 		pername = ts3.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
-	if(period === "week")
+	if(per === "week")
 		if(ts2.getMonth() === ts3.getMonth() || (ts2.getMonth() !== ts3.getMonth() && ts3.getDate() === 1))
 			pername = ts2.getDate() + ' - ' + (ts2.getDate() + 6) + ' ' + ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
 		else if(ts2.getFullYear === ts3.getFullYear)
@@ -379,9 +380,9 @@ function period_totext(ts3, ts2) {
 		else
 			pername = ts2.getDate() + ' ' + ts2.toLocaleDateString(undefined, { month: "short", year: "numeric" })
 				+ ' - ' + (ts2.getDate() + 6) + ' ' + ts3.toLocaleDateString(undefined, { month: "short", year: "numeric" });
-	if(period === 'month')
+	if(per === 'month')
 		pername = ts2.toLocaleDateString(undefined, { month: "short", year: "numeric" });
-	if(period === 'year')
+	if(per === 'year')
 		pername = ts2.toLocaleDateString(undefined, { year: "numeric" });
 
 	return pername;
@@ -393,8 +394,8 @@ function draw_period() {
 	var d = periods[period];
 	
 	d3.selectAll(".periodterm").text(period.charAt(0).toUpperCase() + period.slice(1));		// Week/Month/Day
-	d3.selectAll(".period").text(period_totext(d.ts3, d.ts2));
-	d3.selectAll(".prevperiod").text(period_totext(d.ts2, d.ts1));
+	d3.selectAll(".period").text(period_totext(d.ts3, d.ts2, period));
+	d3.selectAll(".prevperiod").text(period_totext(d.ts2, d.ts1, period));
 
 }
 
@@ -521,7 +522,6 @@ function read_data() {
 		draw_period();
 		draw_genre();
 		draw_periods();
-		d3.select("#accuracy").text(periods[period].accuracy);	// data capture downtime
 		
 	});
 

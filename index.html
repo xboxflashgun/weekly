@@ -65,11 +65,6 @@
 			</select>
 		</span>
 		
-		<span class="box">
-			DCD: <span id="accuracy"></span>
-			<span class="qmark">?</span>
-		</span>
-
 	</div>
 
 	<div>
@@ -180,27 +175,18 @@
 		<h1>Select period to show</h1>
 		<table>
 			<thead>
-				<th colspan="2">Period</th><th>Dates</th><th>Gamers</th><th>Hours</th><th>Accuracy</th>
+				<th>Period</th><th>Dates</th><th>Gamers</th><th>Hours</th><th>Accuracy</th><th>Sampling</th>
 			</thead>
 			<tbody>
-				<tr>
-					<td><input type="radio" name="period" value="day"></td>
-					<td><h2>Day</h2></td>
-					<td>day</td>
-					<td>?</td>
-					<td>?</td>
-					<td>?</td>
-				</tr>
-				<tr>
-					<td><input type="radio" name="period" value="week" checked></td>
-					<td><h2>Week</h2></td>
-					<td>week</td>
-					<td>?</td>
-					<td>?</td>
-					<td>?</td>
-				</tr>
 			</tbody>
 		</table>
+		<hr />
+		<dl>
+			<dt>Accuracy</dt>
+			<dd>is a number of seconds</dd>
+			<dt>Sampling</dt>
+			<dd>is how often</dd>
+		</dl>
 	</div>
 
 	<footer><a href="#">Download raw data</a></footer>
