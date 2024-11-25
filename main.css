@@ -356,6 +356,17 @@ a {
 	font-size: 13px;
 	top: 120px;
 	left: 350px;
+	max-width: 600px;
 }
 
+dt {
+	color: #ccc;
+	font-weight: bold;
+	padding-top: 6px;
+}
 
+dd::before {
+	content: '\2014';
+	padding-right: 6px;
+	margin-left: -19px;
+}

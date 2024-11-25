@@ -20,7 +20,7 @@ var show = "abs";	// cell format: "gamers"/"perc"/"place"
 var dim  = "avgh";	// table info: "gamers"/"avgh"
 var showdiff = true;	// show difference with previous period
 var devsel = new Set;
-var period = "week";
+var period = "day";
 var colsorted;
 var curgenre;		// current genre
 
@@ -33,6 +33,7 @@ function main() {
 
 	// devsel.add("7");		// Xbox360
 	// devsel.add("4");		// WindowsOneCore
+	// devsel.add("8");		// WindowsOneCoreMobile
 
 	read_data();
 
@@ -452,6 +453,11 @@ function read_data() {
 
 		countries["0"] = { country: 'World', countryname: 'World' };
 		titleids["0"] = { name: 'All games' };
+
+		Object.keys(countries).forEach(c => {			// fill gamers["0"] with every country if not defined
+			gamers["0"][c]  ??= { avgh: { abs: 0 }, gamers: { abs: 0 } };
+			prevper["0"][c] ??= { avgh: { abs: 0 }, gamers: { abs: 0 } };
+		});
 
 		// calculating places and percentage
 		function pre_calc( g ) {
