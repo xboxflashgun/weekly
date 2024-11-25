@@ -40,6 +40,17 @@ function draw_periods() {
 
 		});
 
+		window_drag(d3.select("#periodselect"));
+		d3.select("#params .period").on('click', () => d3.select("#periodselect").style("display", null));
+		d3.select("#periodselect .winclose").on('click', e => d3.select("#periodselect").style("display", "none"));
+
+		tab.selectAll('input').on('change', e => {
+
+			period = e.target.value;
+			read_all_data();
+
+		});
+
 	});
 
 }

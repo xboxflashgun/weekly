@@ -8,8 +8,6 @@ var devgenres = {};		// devgenres[titleid] = { devids: [1,2,3], genreids: [6,7,8
 var genres = {};		// genrelist[genreid] = { genre, gamers, games, avgh };
 var langs = {};			// langs[countryid] = { lang: , path: }
 
-var grouped;
-
 var allcountries;
 var allgames;
 var alldevices;
@@ -22,19 +20,16 @@ var show = "abs";	// cell format: "gamers"/"perc"/"place"
 var dim  = "avgh";	// table info: "gamers"/"avgh"
 var showdiff = true;	// show difference with previous period
 var devsel = new Set;
-var period = "day";
-var colsorted = [];
-var curgenre = "0";		// current genre
+var period = "week";
+var colsorted;
+var curgenre;		// current genre
 
 var compactsel = 1;
 
 function main() {
 
-	// hide device popup
-	d3.select("#devpopup").style("display", "none");
-	d3.select("#cellinfo").style("display", "none");
-	d3.select("#genrepopup").style("display", "none");
-	d3.select("#countryselect").style("display", "none");
+	// hide popups
+	d3.selectAll(".popupbox").style("display", "none");
 
 	// devsel.add("7");		// Xbox360
 	// devsel.add("4");		// WindowsOneCore
@@ -399,6 +394,19 @@ function draw_period() {
 
 }
 
+function read_all_data() {		// in case of switch to new period
+
+	devices = {};
+	devsel = new Set;
+	periods = {};
+	langs = {};
+	colsorted = [];
+	curgenre = "0";
+
+	read_data();
+
+}
+
 function read_data() {
 
 	var pr = [];
@@ -417,7 +425,7 @@ function read_data() {
 	sortcolord = 1;
 	sortrow = "0";
 	sortroword = 1;
-	langs["0"] = { lang: 'Neutral', path: '' }
+	langs["0"] = { lang: 'Neutral', path: '' };
 
 	var devids = (devsel.size > 0) ? `&devids=${Array.from(devsel).join(',')}` : '';
 

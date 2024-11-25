@@ -24,7 +24,8 @@ function draw_country() {
 
 	}, update => {
 
-		update.select('tr').attr('data-id', d => d);
+		update.attr('data-id', d => d);
+		update.select('input').property('name', d => d);
 		update.select('td:nth-child(1)').attr('title', d => countries[d].countryname);
 		update.select('td:nth-child(1) span').text(d => countries[d].country);
 		update.select('td:nth-child(2)').text(d => countries[d].gamers);

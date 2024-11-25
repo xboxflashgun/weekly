@@ -16,7 +16,8 @@ function draw_devices() {
 		
 	}, update => {
 
-		update.select('td:nth-child(1)').attr('data-id', d => d.devid).property('checked', d => devsel.has(d.devid));
+		update.attr('data-id', d => d);
+		update.select('td:nth-child(1) input').attr('data-id', d => d).property('checked', d => devsel.has(d));
 		update.select('td:nth-child(2)').text(d => devices[d].devname);
 		update.select('td:nth-child(3)').text(d => devices[d].gamers);
 		update.select('td:nth-child(4)').text(d => devices[d].games);

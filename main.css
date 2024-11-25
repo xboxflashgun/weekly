@@ -350,3 +350,12 @@ a {
 #countrymark li::marker {
 	content: none;
 }
+
+#periodselect {
+	background-color: #520;
+	font-size: 13px;
+	top: 120px;
+	left: 350px;
+}
+
+
