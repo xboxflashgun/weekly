@@ -27,13 +27,13 @@ function draw_periods() {
 			var td = tr.append('td').attr('title', 'compared to previous ' + r.period);
 			td.append('span').text(compact(r.gamers4));
 			td.append('br');
-			td.append('span').classed( flg ? 'arrowup' : 'arrowdown', true).text( (flg ? '+' : '-') + compact(r.gamers4 - r.gamers5));
+			td.append('span').classed( flg ? 'arrowup' : 'arrowdown', true).text( (flg ? '+' : '') + compact(r.gamers4 - r.gamers5));
 
 			flg = (r.hours4 > r.hours5);
 			td = tr.append('td').attr('title', 'compared to previous ' + r.period);
 			td.append('span').text(compact(r.hours4));
 			td.append('br');
-			td.append('span').classed( flg ? 'arrowup' : 'arrowdown', true).text( (flg ? '+' : '-') + compact(r.hours4 - r.hours5));
+			td.append('span').classed( flg ? 'arrowup' : 'arrowdown', true).text( (flg ? '+' : '') + compact(r.hours4 - r.hours5));
 
 			tr.append('td').text('~' + compact(100*(1 - r.accuracy)) + '%');
 			tr.append('td').text( `${((r.avgsecs / 60) | 0)}:${r.avgsecs % 60}`);
