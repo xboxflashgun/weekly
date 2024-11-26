@@ -124,14 +124,16 @@ function draw_table() {
 		if(gamers[t][c][dim][show]) {
 
 			if(gamers[t][c].gamers.abs === 0)
-				if(prevper[t][c].gamers.abs === 0)
+				if(prevper[t][c] && prevper[t][c].gamers.abs === 0)
 					gamers[t][c].cell = '<span class="out">&mdash;</span>';
-				else
+				else if(prevper[t][c])
 					gamers[t][c].cell = '<span class="out">OUT</span>';
+				else
+					gamers[t][c].cell = '<span class="out">&mdash;</span>';
 			else {
 
 				gamers[t][c].cell = `${fff(gamers[t][c][dim][show])}`;
-				if(showdiff && prevper[t] && gamers[t][c][dim][show] !== prevper[t][c][dim][show])  {
+				if(showdiff && prevper[t] && prevper[t][c] && gamers[t][c][dim][show] !== prevper[t][c][dim][show])  {
 
 					var grew = (gamers[t][c][dim][show] > prevper[t][c][dim][show]);
 					grew = (show === "place") ? !grew : grew;
@@ -148,8 +150,10 @@ function draw_table() {
 
 			}
 
-		} else
+		} else if(prevper[t] && prevper[t][c])
 			gamers[t][c].cell = `<span class="out">${( !!prevper[t] && prevper[t][c].gamers.abs > 0) ? "OUT" : "&mdash;"}</span>`;
+		else
+			gamers[t][c].cell = '<span class="out">&mdash;</span>';
 
 	}));
 
@@ -456,6 +460,7 @@ function read_data() {
 
 		Object.keys(countries).forEach(c => {			// fill gamers["0"] with every country if not defined
 			gamers["0"][c]  ??= { avgh: { abs: 0 }, gamers: { abs: 0 } };
+			prevper["0"] ??= {};
 			prevper["0"][c] ??= { avgh: { abs: 0 }, gamers: { abs: 0 } };
 		});
 
@@ -482,6 +487,7 @@ function read_data() {
 			});
 
 			// places
+			g["0"] ??= {};
 			[ "gamers", "avgh" ].forEach( d => {
 				Object.keys(g["0"]).forEach( c => {		// cycle by country for "All games"
 
