@@ -124,9 +124,9 @@ function draw_table() {
 		if(gamers[t][c][dim][show]) {
 
 			if(gamers[t][c].gamers.abs === 0)
-				if(prevper[t][c] && prevper[t][c].gamers.abs === 0)
+				if(prevper[t] && prevper[t][c] && prevper[t][c].gamers.abs === 0)
 					gamers[t][c].cell = '<span class="out">&mdash;</span>';
-				else if(prevper[t][c])
+				else if(prevper[t] && prevper[t][c])
 					gamers[t][c].cell = '<span class="out">OUT</span>';
 				else
 					gamers[t][c].cell = '<span class="out">&mdash;</span>';
